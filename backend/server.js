@@ -1,10 +1,12 @@
 const express = require('express')
 const mountRoutes = require('./routes')
-
+const cors = require('cors')
 const app = express()
 const port = 3001
 
-mountRoutes(app);
+app.use(cors())
+
+mountRoutes(app)
 
 app.get('/', (req, res) => {
     res.send('Hello World!')
