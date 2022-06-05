@@ -1,17 +1,19 @@
 const express = require('express')
 const mountRoutes = require('./routes')
+const bodyParser = require('body-parser')
 const cors = require('cors')
 const app = express()
 const port = 3001
 
-app.use(cors())
+app.use(bodyParser.json())
+
+app.use(cors({
+    origin: 'http://localhost:3000'
+}))
+
 
 mountRoutes(app)
 
-app.get('/', (req, res) => {
-    res.send('Hello World!')
-})
-
 app.listen(port, () => {
-    console.log('test connection')
+    console.log('server running on port', port)
 })

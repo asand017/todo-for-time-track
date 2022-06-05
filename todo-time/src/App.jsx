@@ -1,42 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  QueryClient,
-  QueryClientProvider
-} from 'react-query';
-import Task from './tasks/Task';
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider
+  } from 'react-query';
+import { getTodos, addTodo } from './api/apiService';
 
 const queryClient = new QueryClient();
 
 function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <Todos />
-    </QueryClientProvider>
-  );
+    return (
+        <QueryClientProvider client={queryClient}>
+            <Todos />
+        </QueryClientProvider>
+    )
 }
 
 function Todos() {
-  const queryClient = useQueryClient();
-  const fetchTest = async () =>
-    await (await fetch("http://localhost:3001/todos")).json();
+    const queryClient = useQueryClient();
 
-  const query = useQuery('todos', fetchTest);
+    const query = useQuery('todos', getTodos)
 
-  const tasks = useState([]);
+    const mutation = useMutation(addTodo, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('todos')
+        },
+    })
 
-  useEffect(() => {
-    console.log(query);
-  }, [])
-
-  return (
-    <div className="App">
-      <header className="App-header">To-Do List</header>
-      
-    </div>
-  );
-}
+    return (
+        <div>
+            <button onClick={() => {
+                mutation.mutate({
+                    name: "fucker",
+                    description: "kill",
+                    priority: 3
+                })
+            }}>Add Todo</button>
+        </div>
+    )
+}  
 
 export default App;
