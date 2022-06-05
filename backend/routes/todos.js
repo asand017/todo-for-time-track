@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 router.get('/fetchTodos', async (req, res) => {
     //console.log(req.query)
     const { rows } = await db.query('SELECT * FROM tasks')
-    console.log(rows[0])
+    console.log("fetching rows: ", rows[0])
     res.send(rows[0])
 })
 

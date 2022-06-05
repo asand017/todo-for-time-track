@@ -7,6 +7,8 @@ import {
     QueryClientProvider
   } from 'react-query';
 import { getTodos, addTodo } from './api/apiService';
+import Container from '@mui/material/Container';
+import TaskAdd from './tasks/TaskAdd';
 
 const queryClient = new QueryClient();
 
@@ -30,15 +32,9 @@ function Todos() {
     })
 
     return (
-        <div>
-            <button onClick={() => {
-                mutation.mutate({
-                    name: "fucker",
-                    description: "kill",
-                    priority: 3
-                })
-            }}>Add Todo</button>
-        </div>
+        <Container maxWidth='lg'>
+            <TaskAdd mutation={mutation} />
+        </Container>
     )
 }  
 
