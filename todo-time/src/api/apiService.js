@@ -1,8 +1,10 @@
 import axios from 'axios';
 
-export const getTodos = async () => {
-    const { data } = await axios.get('http://localhost:3001/todos/fetchTodos');
-    return data;
+export const getTodos = () => {
+    return axios.get('http://localhost:3001/todos/fetchTodos').then((data) => {
+        console.log(data);
+        return data;
+    })
 }
 
 export const addTodo = async (parms) => {

@@ -7,15 +7,15 @@ module.exports = router
 router.get('/', async (req, res) => {
     //console.log("request from client:", req)
     const { rows } = await db.query('SELECT NOW()')
-    console.log(rows[0])
-    res.send(rows[0])
+    console.log(rows)
+    res.send(rows)
 })
 
 router.get('/fetchTodos', async (req, res) => {
     //console.log(req.query)
     const { rows } = await db.query('SELECT * FROM tasks')
-    console.log("fetching rows: ", rows[0])
-    res.send(rows[0])
+    console.log("fetching rows: ", rows)
+    res.send(rows)
 })
 
 router.post('/addTodo', async (req, res) => {
