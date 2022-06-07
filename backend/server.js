@@ -8,7 +8,7 @@ const port = 3001
 app.use(bodyParser.json())
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: "*"//['http://localhost:3000', '192.168.1.4']
 }))
 
 
