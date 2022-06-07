@@ -26,14 +26,6 @@ function Todos() {
     const queryClient = useQueryClient();
 
     const query = useQuery('todos', getTodos);
-    //const { isLoading, isError, data, error } = useQuery('todos', getTodos);
-
-    /*const { isLoading, isError, data, error } = useQuery('todos', () => {
-        return axios.get('http://localhost:3001/todos/fetchTodos').then((res) => {
-            console.log("response: ", res);
-            return res; 
-        })
-    });*/
 
     const mutation = useMutation(addTodo, {
         onSuccess: () => {
@@ -44,14 +36,6 @@ function Todos() {
     useEffect(() => {
         //console.log("data:", data);  
     });
-
-    /*if (isLoading) {
-        return <span>Loading...</span>
-    }
-
-    if (isError) {
-        return <span>Error: {error.message}</span>
-    }*/
 
     return (
         <Container maxWidth='lg'>

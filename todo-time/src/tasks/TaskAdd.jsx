@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Stack from '@mui/material/Stack';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
 import { useFormik } from 'formik';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTime } from 'luxon';
+import './TaskAdd.css';
 
 export default function TaskAdd(props) {
-
+    const [open, setOpen] = useState(false);
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
 
@@ -47,6 +53,14 @@ export default function TaskAdd(props) {
         }
     })
 
+    const handleClickOpen = () => {
+        setOpen(true);
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     useEffect(() => {
         console.log("Start Time: ", startTime);
     }, [startTime]);
@@ -56,62 +70,64 @@ export default function TaskAdd(props) {
     }, [endTime]);
 
     return (
-        <div>
-            <Box
-                component="form"
-                sx={{
-                    '& > :not(style)': {m: 1, width: '25ch'},
-                }}
-                autoComplete="off"
-                onSubmit={formik.handleSubmit}
-            >
-                <TextField required id="name" 
-                    name="name" 
-                    label="Task Name" 
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                    error={formik.touched.name && Boolean(formik.errors.name)}/>
-                <TextField required id="description" 
-                    name="description" 
-                    label="Task Description"
-                    value={formik.values.description}
-                    onChange={formik.handleChange}
-                    error={formik.touched.description && Boolean(formik.errors.description)}/>
-                <TextField required id="priority" 
-                    name="priority" 
-                    label="Priority" 
-                    value={formik.values.priority}
-                    onChange={formik.handleChange}
-                    error={formik.touched.priority && Boolean(formik.errors.priority)}/>
-                <LocalizationProvider dateAdapter={AdapterLuxon}>
-                    <Stack spacing={2}>
-                        <TimePicker
-                            label="Start Time"
-                            value={startTime}
-                            onChange={(value) => {
-                                setStartTime(value);
-                            }}
-                            renderInput={(params) => <TextField {...params}/>}
-                        />
-                        <TimePicker
-                            label="End Time"
-                            value={endTime}
-                            onChange={(value) => {
-                                setEndTime(value);
-                            }}
-                            renderInput={(params) => <TextField {...params}/>}
-                        />
-                    </Stack>
-                </LocalizationProvider>
-                <Button color="primary" variant="outlined" type="submit">Add Todo</Button>
-            </Box>
+        <div className="container">
+            <Button variant="outlined" onClick={handleClickOpen}>Create Time Todo</Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>New Todo Task</DialogTitle>
+                <DialogContent>
+                    <Box
+                        component="form"
+                        sx={{
+                            '& > :not(style)': {m: 1, width: '25ch'},
+                        }}
+                        autoComplete="off"
+                        onSubmit={formik.handleSubmit}
+                    >
+                        <TextField required id="name" 
+                            name="name" 
+                            label="Task Name" 
+                            value={formik.values.name}
+                            onChange={formik.handleChange}
+                            error={formik.touched.name && Boolean(formik.errors.name)}/>
+                        <TextField required id="description" 
+                            name="description" 
+                            label="Task Description"
+                            value={formik.values.description}
+                            onChange={formik.handleChange}
+                            error={formik.touched.description && Boolean(formik.errors.description)}/>
+                        <TextField required id="priority" 
+                            name="priority" 
+                            label="Priority" 
+                            value={formik.values.priority}
+                            onChange={formik.handleChange}
+                            error={formik.touched.priority && Boolean(formik.errors.priority)}/>
+                        <LocalizationProvider dateAdapter={AdapterLuxon}>
+                            <TimePicker
+                                label="Start Time"
+                                value={startTime}
+                                onChange={(value) => {
+                                    setStartTime(value);
+                                }}
+                                renderInput={(params) => <TextField {...params}/>}
+                            />
+                            <TimePicker
+                                label="End Time"
+                                value={endTime}
+                                onChange={(value) => {
+                                    setEndTime(value);
+                                }}
+                                renderInput={(params) => <TextField {...params}/>}
+                            />
+                        </LocalizationProvider>
+                        <div style={{width: '100%', display: 'flex', justifyContent: 'center' }}>
+                            <Stack direction='row' spacing={2}>
+                                <Button color="primary" variant="outlined" onClick={handleClose}>Cancel</Button>
+                                <Button color="primary" variant="outlined" type="submit" onClick={handleClose}>Confirm New Todo</Button>
+                            </Stack>
+                        </div>
+                    </Box>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
-
-/*
-<label htmlFor="start_time">Start Time</label>
-<TimePicker id="start_time" name="start_time" value={startTime} onChange={ (value) => setStartTime(value)}/>
-<label htmlFor="end_time">End Time</label>
-<TimePicker id="end_time" name="end_time" value={endTime} onChange={ (value) => setEndTime(value)}/>
-*/

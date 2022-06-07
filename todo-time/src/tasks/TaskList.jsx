@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import Stack from '@mui/material/Stack';
+import Task from './Task';
 
 export default function TaskList(props){
 
@@ -17,12 +19,16 @@ export default function TaskList(props){
     }
 
     return (
-        <div>
-            {<ul>
-                {data.data.map(todo => (
-                    <li key={todo.id}>{todo.name}</li>
-                ))}
-            </ul>}
-        </div>
+        <Stack spacing={3}>
+            {data.data.map(todo => (
+                <Task key={todo.id} 
+                    name={todo.name} 
+                    description={todo.description} 
+                    priority={todo.priority} 
+                    start={todo.start_time}
+                    end={todo.end_time}
+                />
+            ))}
+        </Stack>
     )
 }
