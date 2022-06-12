@@ -16,6 +16,7 @@ mountRoutes(app)
 
 app.use('/', express.static(path.resolve(__dirname, "./todo-time/build")))
 
-app.listen(port, () => {
+app.listen(port)
+/*app.listen(port, () => {
     console.log('server running on port', port)
-})
+})*/
