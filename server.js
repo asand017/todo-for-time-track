@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express')
 const mountRoutes = require('./routes')
 const bodyParser = require('body-parser')
@@ -16,7 +17,12 @@ mountRoutes(app)
 
 app.use('/', express.static(path.resolve(__dirname, "./todo-time/build")))
 
-app.listen(port)
-/*app.listen(port, () => {
-    console.log('server running on port', port)
-})*/
+if (process.env.NODE_ENV === 'development') {
+    app.listen(port, () => {
+        console.log('server running on port:', port)
+    })
+}
+
+if (process.env.NODE_ENV === 'production') {
+    app.listen(process.env.PORT)
+}
