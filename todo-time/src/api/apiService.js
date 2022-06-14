@@ -5,7 +5,7 @@ var api_url = "";
 if(process.env.NODE_ENV === "development"){
     api_url = process.env.REACT_APP_DEV_API_URL;
 }else if(process.env.NODE_ENV === "production"){
-    api_url = "http://localhost:80/todos";
+    api_url = "/todos";
 }
 console.log(api_url);
 
