@@ -33,10 +33,6 @@ function Todos() {
         },
     })
 
-    useEffect(() => {
-        //console.log("data:", data);  
-    });
-
     return (
         <Container maxWidth='lg'>
             <TaskAdd mutation={mutation} />
@@ -45,5 +41,4 @@ function Todos() {
     )
 }  
 
-//<TaskList client={queryClient} query={query} />
 export default App;

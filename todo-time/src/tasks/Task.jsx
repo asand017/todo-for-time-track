@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 export default function Task(props) {
 
     useEffect(() => {
-        console.log(props);
+        console.log("props:", props);
     }, []);
 
     return (
