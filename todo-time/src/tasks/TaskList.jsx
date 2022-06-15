@@ -22,6 +22,7 @@ export default function TaskList(props){
         <Stack spacing={3}>
             {data.data.map(todo => (
                 <Task key={todo.id} 
+                    no={todo.id}
                     name={todo.name} 
                     description={todo.description} 
                     priority={todo.priority} 

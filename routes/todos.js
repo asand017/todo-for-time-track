@@ -4,13 +4,6 @@ const db = require('../db')
 
 module.exports = router
 
-/*router.get('/', async (req, res) => {
-    //console.log("request from client:", req)
-    const { rows } = await db.query('SELECT NOW()')
-    console.log(rows)
-    res.send(rows)
-})*/
-
 router.get('/fetchTodos', async (req, res) => {
     //console.log(req.query)
     const { rows } = await db.query('SELECT * FROM tasks')

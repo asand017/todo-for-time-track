@@ -1,0 +1,19 @@
+.card-face_container {
+    display: block;
+    
+    padding: 0 1rem;
+}
+
+.card-face_container > h2, h3 {
+    /*padding-left: 1rem;*/
+    float: left;
+}
+
+.expand {
+    /*align-self: flex-end;*/
+    display: flex;
+    height: 100%;
+    float: right;
+    justify-content: center;
+    align-items: center;
+}
