@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-console.log(process.env);
+//console.log(process.env);
 var api_url = "";
 if(process.env.NODE_ENV === "development"){
     api_url = process.env.REACT_APP_DEV_API_URL;
 }else if(process.env.NODE_ENV === "production"){
     api_url = "/todos";
 }
-console.log(api_url);
+//console.log(api_url);
 
 export const getTodos = () => {
     return axios.get(api_url+'/fetchTodos').then((data) => {

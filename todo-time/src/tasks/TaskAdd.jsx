@@ -8,6 +8,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 import { useFormik } from 'formik';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -71,7 +73,9 @@ export default function TaskAdd(props) {
 
     return (
         <div className="container">
-            <Button variant="outlined" onClick={handleClickOpen}>Create Time Todo</Button>
+            <Fab color="primary" size="medium" aria-label="add" onClick={handleClickOpen}>
+                <AddIcon />
+            </Fab>
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>New Todo Task</DialogTitle>
                 <DialogContent>
@@ -131,3 +135,5 @@ export default function TaskAdd(props) {
         </div>
     )
 }
+
+//<Button variant="outlined" onClick={handleClickOpen}>Create Time Todo</Button>

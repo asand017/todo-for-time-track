@@ -8,24 +8,21 @@
 .task-info {
     grid-area: 'task_info';
     display: grid;
-    grid-template-areas: 'id title time_frame';
-    grid-template-columns: 30px 1fr 3fr;
+    grid-template-areas: 'id title time_frame productive';
+    grid-template-columns: auto auto auto 1fr;
 }
 
-.task-info > * {
-    margin: 5px;
-}
-
-.task-id {
-
-}
-
-.task-title {
-
+.task-id, .task-title {
+    padding-right: 2em;
 }
 
 .task-time_frame {
     
+}
+
+.priority {
+    font-size: 1rem;
+    color: green;
 }
 
 .expand-icon {
@@ -37,4 +34,10 @@
 
 .icon:hover {
     cursor: pointer;
+}
+
+.info-dialog-buttons {
+    display: flex;
+    justify-content: center;
+
 }
