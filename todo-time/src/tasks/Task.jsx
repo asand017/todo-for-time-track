@@ -10,16 +10,51 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
+import { useFormik } from 'formik';
 import './Task.css';
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
 
+function DeleteDialog(props) {
+    const { onClose, open } = props;
+
+    const handleClose = () => {
+        onClose()
+    }
+
+    const deleteTask = () => {
+        // trigger db delete
+        onClose();
+    }
+
+    return (
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>
+                Are you sure you want to delete?
+            </DialogTitle>
+            <DialogActions>
+                <Button onClick={deleteTask}>Yes</Button>
+                <Button onClick={handleClose}>No</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}
 
 function InfoDialog(props) {
     const { onClose, open } = props;
     const [priorityColor, setPriorityColor] = useState('');
+    const [openDelete, setOpenDelete] = useState(false);
+    const [edit, setEdit] = useState(false);
 
     const handleClose = () => {
-        onClose()
+        onClose();
+    }
+
+    const handleDeleteClose = () => {
+        setOpenDelete(false);
+    }
+
+    const handleDelete = () => {
+        setOpenDelete(true);
     }
 
     useEffect(() => {
@@ -27,23 +62,26 @@ function InfoDialog(props) {
     }, []);
 
     return (
-        <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>
-                <div>{props.task.name} <span className='priority'>Priority: {props.task.priority}</span></div>
-                <div>{props.task.start} - {props.task.end}</div>
-            </DialogTitle>
-            <DialogContent>
-                <h3>Description</h3>
-                <p>{props.task.description}</p>
-            </DialogContent>
-            <DialogActions>
-                <IconButton aria-label="expand" onClick={handleClose}>
-                    <CloseIcon className='icon'/>
-                </IconButton>
-                <Button>Edit</Button>
-                <Button>Delete</Button>
-            </DialogActions>
-        </Dialog>
+        <>
+            <Dialog onClose={handleClose} open={open}>
+                <DialogTitle>
+                    <div>{props.task.name} <span className='priority'>Priority: {props.task.priority}</span></div>
+                    <div>{props.task.start} - {props.task.end}</div>
+                </DialogTitle>
+                <DialogContent>
+                    <h3>Description</h3>
+                    <p>{props.task.description}</p>
+                </DialogContent>
+                <DialogActions>
+                    <IconButton aria-label="expand" onClick={handleClose}>
+                        <CloseIcon className='icon'/>
+                    </IconButton>
+                    <Button>Edit</Button>
+                    <Button onClick={handleDelete}>Delete</Button>
+                </DialogActions>
+            </Dialog>
+            <DeleteDialog onClose={handleDeleteClose} open={openDelete}></DeleteDialog>
+        </>
     )
 }
 
@@ -58,6 +96,7 @@ export default function Task(props) {
         setOpen(false);
     }
 
+    // update task productivity flag
     const handleSetProductivity = () => {
         
     }

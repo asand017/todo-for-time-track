@@ -77,7 +77,7 @@ export default function TaskAdd(props) {
                 <AddIcon />
             </Fab>
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>New Todo Task</DialogTitle>
+                <DialogTitle sx={{borderBottom: '1px solid rgba(0,0,0,0.3)', paddingBottom: '2px'}}>New Task</DialogTitle>
                 <DialogContent>
                     <Box
                         component="form"
