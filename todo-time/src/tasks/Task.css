@@ -12,12 +12,14 @@
     grid-template-columns: auto auto auto 1fr;
 }
 
-.task-id, .task-title {
+.task-title {
     padding-right: 2em;
 }
 
-.task-time_frame {
-    
+.task-title, .task-time-frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .priority {

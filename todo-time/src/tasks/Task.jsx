@@ -9,35 +9,10 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import CloseIcon from '@mui/icons-material/Close';
-import TextField from '@mui/material/TextField';
-import { useFormik } from 'formik';
 import './Task.css';
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
-
-function DeleteDialog(props) {
-    const { onClose, open } = props;
-
-    const handleClose = () => {
-        onClose()
-    }
-
-    const deleteTask = () => {
-        // trigger db delete
-        onClose();
-    }
-
-    return (
-        <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>
-                Are you sure you want to delete?
-            </DialogTitle>
-            <DialogActions>
-                <Button onClick={deleteTask}>Yes</Button>
-                <Button onClick={handleClose}>No</Button>
-            </DialogActions>
-        </Dialog>
-    )
-}
+import DialogComponent from './Dialog';
+import DialogForm from './DialogForm';
 
 function InfoDialog(props) {
     const { onClose, open } = props;
@@ -51,10 +26,28 @@ function InfoDialog(props) {
 
     const handleDeleteClose = () => {
         setOpenDelete(false);
+        handleClose();
+    }
+
+    const handleEditClose = () => {
+        setEdit(false);
+        handleClose();
     }
 
     const handleDelete = () => {
         setOpenDelete(true);
+    }
+    
+    const handleEdit = () => {
+        setEdit(true);
+    }
+
+    const sendUpdate = () => {
+        console.log("send update to db");
+    }
+
+    const sendDelete = () => {
+        console.log("send delete to db");
     }
 
     useEffect(() => {
@@ -76,11 +69,25 @@ function InfoDialog(props) {
                     <IconButton aria-label="expand" onClick={handleClose}>
                         <CloseIcon className='icon'/>
                     </IconButton>
-                    <Button>Edit</Button>
+                    <Button onClick={handleEdit}>Edit</Button>
                     <Button onClick={handleDelete}>Delete</Button>
                 </DialogActions>
             </Dialog>
-            <DeleteDialog onClose={handleDeleteClose} open={openDelete}></DeleteDialog>
+            <DialogForm onClose={handleEditClose}
+                open={edit}
+                task={props.task}
+                submitCallback={sendUpdate}
+                action_button_text="Update"
+                close_button_text="Cancel"
+                />
+            <DialogComponent onClose={handleDeleteClose} 
+                open={openDelete} 
+                title="Delete Task"
+                content="Are you sure you want to delete?"
+                action_button_text="Yes"
+                close_button_text="No"
+                handleAction={sendDelete}
+                />
         </>
     )
 }
@@ -111,22 +118,18 @@ export default function Task(props) {
                 <div className='card-face_container'>
                     <div className='task-info'>
                         <div className='task-id'>
-                            <h2>
-                                <Badge badgeContent={props.priority} color="primary">
-                                    {props.no}. 
-                                </Badge>
+                            <h2> 
+                                <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                    <FormControlLabel control={
+                                        <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
+                                    } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
+                                </FormGroup>
                             </h2>
                         </div>
                         <div className='task-title'><h2>{props.name}</h2></div> 
                         <div className='task-time-frame'><h2>{props.start} <span>-</span> {props.end}</h2></div>
-                        <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                            <FormControlLabel control={
-                                <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
-                            } label="Productive?" sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
-                        </FormGroup>
                     </div>
                     <div className='expand-icon'>
-                        
                         <IconButton aria-label="expand" onClick={handleClickOpen}>
                             <DensityMediumIcon className='icon'/>
                         </IconButton>
@@ -137,3 +140,33 @@ export default function Task(props) {
         </>
     );
 }
+
+
+/*function DeleteDialog(props) {
+    const { onClose, open } = props;
+
+    const handleClose = () => {
+        onClose()
+    }
+
+    const deleteTask = () => {
+        // trigger db delete
+        onClose();
+    }
+
+    return (
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>
+                Are you sure you want to delete?
+            </DialogTitle>
+            <DialogActions>
+                <Button onClick={deleteTask}>Yes</Button>
+                <Button onClick={handleClose}>No</Button>
+            </DialogActions>
+        </Dialog>
+    )
+}*/
+
+
+// <DeleteDialog onClose={handleDeleteClose} open={openDelete}></DeleteDialog>
+// <Badge badgeContent={props.priority} color="primary"></Badge>
