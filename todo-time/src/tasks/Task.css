@@ -16,6 +16,13 @@
     padding-right: 2em;
 }
 
+@media screen and (max-width: 456px){
+    .task-title {
+        padding-right: 1em;
+        font-weight: 500;
+    }
+}
+
 .task-title, .task-time-frame {
     display: flex;
     justify-content: center;

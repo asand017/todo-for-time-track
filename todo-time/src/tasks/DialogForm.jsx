@@ -15,6 +15,8 @@ import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText } 
 
 export default function DialogForm(props) {
     const { onClose, open, task } = props;
+    const [startTime, setStartTime] = useState(DateTime.fromFormat(task.start, 'TT'));
+    const [endTime, setEndTime] = useState(DateTime.fromFormat(task.end, 'TT'));
 
     const validate = (values, props) => {
         const errors = {};
@@ -35,13 +37,12 @@ export default function DialogForm(props) {
             name: task.name, 
             description: task.description,
             priority: task.priority,
-            startTime: DateTime.fromSQL(task.start),
-            endTime: DateTime.fromSQL(task.end)
-
+            startTime: startTime,
+            endTime: endTime
         },
         validate: validate,
         onSubmit: (values) => {
-            props.submitCallback();
+            props.submitCallback(values);
         }
     })
 
@@ -51,7 +52,7 @@ export default function DialogForm(props) {
 
     useEffect(() => {
         console.log(task);
-        console.log(DateTime.fromSQL(task.start), DateTime.fromSQL(task.end));
+        console.log(startTime, endTime);
     }, [])
 
     return (
@@ -90,14 +91,18 @@ export default function DialogForm(props) {
                         <LocalizationProvider dateAdapter={AdapterLuxon}>
                             <TimePicker
                                 label="Start Time"
-                                value={formik.startTime}
-                                onChange={formik.handleChange}
+                                value={startTime}
+                                onChange={(value) => {
+                                    setStartTime(value);
+                                }}
                                 renderInput={(params) => <TextField {...params}/>}
                             />
                             <TimePicker
                                 label="End Time"
-                                value={formik.endTime}
-                                onChange={formik.handleChange}
+                                value={endTime}
+                                onChange={(value) => {
+                                    setEndTime(value);
+                                }}
                                 renderInput={(params) => <TextField {...params}/>}
                             />
                         </LocalizationProvider>

@@ -4,6 +4,7 @@ import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
+import Container from '@mui/material/Container';
 import IconButton from '@mui/material/IconButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -25,13 +26,13 @@ function InfoDialog(props) {
     }
 
     const handleDeleteClose = () => {
-        setOpenDelete(false);
         handleClose();
+        setOpenDelete(false);
     }
 
     const handleEditClose = () => {
-        setEdit(false);
         handleClose();
+        setEdit(false);
     }
 
     const handleDelete = () => {
@@ -42,8 +43,8 @@ function InfoDialog(props) {
         setEdit(true);
     }
 
-    const sendUpdate = () => {
-        console.log("send update to db");
+    const sendUpdate = (values) => {
+        console.log("send update to db", values);
     }
 
     const sendDelete = () => {
@@ -114,20 +115,18 @@ export default function Task(props) {
 
     return (
         <>
-            <Card sx={{minWidth: 350}}>
+            <Card>
                 <div className='card-face_container'>
                     <div className='task-info'>
                         <div className='task-id'>
-                            <h2> 
-                                <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                                    <FormControlLabel control={
-                                        <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
-                                    } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
-                                </FormGroup>
-                            </h2>
+                            <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                                <FormControlLabel control={
+                                    <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
+                                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
+                            </FormGroup>  
                         </div>
-                        <div className='task-title'><h2>{props.name}</h2></div> 
-                        <div className='task-time-frame'><h2>{props.start} <span>-</span> {props.end}</h2></div>
+                        <div className='task-title'><p>{props.name}</p></div> 
+                        <div className='task-time-frame'><p>{props.start} <span>-</span> {props.end}</p></div>
                     </div>
                     <div className='expand-icon'>
                         <IconButton aria-label="expand" onClick={handleClickOpen}>
