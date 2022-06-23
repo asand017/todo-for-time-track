@@ -45,7 +45,16 @@ export default function DialogForm(props) {
         },
         validate: validate,
         onSubmit: (values) => {
-            props.submitCallback(values);
+            console.log("UPDATEING TODO");
+            props.submitCallback({
+                id: values.id,
+                name: values.name,
+                description: values.description,
+                priority: values.priority,
+                start_time: startTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+                end_time: endTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+                day: dateValue
+            });
             handleClose();
         }
     })
@@ -58,6 +67,10 @@ export default function DialogForm(props) {
         console.log(task);
         console.log(startTime, endTime, dateValue);
     }, [])
+
+    useEffect(() => {
+        console.log("new date set", dateValue);
+    }, [dateValue])
 
     return (
         <>
@@ -122,7 +135,7 @@ export default function DialogForm(props) {
                         </LocalizationProvider>
                         <div style={{width: '100%', display: 'flex', justifyContent: 'center' }}>
                             <Stack direction='row' spacing={2}>
-                                <Button color="primary" variant="outlined" type="submit" onClick={handleClose}>{props.action_button_text}</Button>
+                                <Button color="primary" variant="outlined" type="submit">{props.action_button_text}</Button>
                                 <Button color="primary" variant="outlined" onClick={handleClose}>{props.close_button_text}</Button>
                             </Stack>
                         </div>

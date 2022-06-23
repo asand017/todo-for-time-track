@@ -65,7 +65,7 @@ function InfoDialog(props) {
         try {
             console.log("send delete to db at id="+id);
             const td = await props.del.mutateAsync(id);
-            console.log(td);
+            //console.log(td);
         } catch (error) {
             console.log(error);
         } finally {

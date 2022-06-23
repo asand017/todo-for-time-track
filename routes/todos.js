@@ -22,12 +22,19 @@ router.post('/addTodo', async (req, res) => {
 
 router.put('/updateTodo/:id', async (req, res) => {
     console.log("updating todo:", req.query, req.params)
-    res.send("update request received")
+    const text = 'UPDATE tasks SET name=$2, description=$3, priority=$4, start_time=$5, end_time=$6, day=$7 WHERE id=$1'
+    const values = Object.keys(req.query).map((key) => req.query[key])
+    console.log(values);
+    const { rows } = await db.query(text, values);
+    res.send(rows[0])
 })
 
 router.delete('/deleteTodo/:id', async (req, res) => {
-    console.log("deleting todo:", req.query, req.params)
-    res.send("delete request received")
+    console.log("deleting todo @id=", req.params.id)
+    const text = 'DELETE FROM tasks WHERE id=$1'
+    const values = [req.params.id]
+    const { rows } = await db.query(text, values)
+    res.send(rows[0])
 })
 
 
