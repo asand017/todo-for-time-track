@@ -1,19 +1,25 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import Badge from '@mui/material/Badge';
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
 import Checkbox from '@mui/material/Checkbox';
 import Container from '@mui/material/Container';
+import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import IconButton from '@mui/material/IconButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import DensityMediumIcon from '@mui/icons-material/DensityMedium';
+import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
+import { DateTime } from 'luxon';
 import './Task.css';
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
 import DialogComponent from './Dialog';
 import DialogForm from './DialogForm';
+import { format, parse, parseISO } from 'date-fns';
 
 function InfoDialog(props) {
     const { onClose, open } = props;
@@ -59,8 +65,14 @@ function InfoDialog(props) {
         <>
             <Dialog onClose={handleClose} open={open}>
                 <DialogTitle>
-                    <div>{props.task.name} <span className='priority'>Priority: {props.task.priority}</span></div>
-                    <div>{props.task.start} - {props.task.end}</div>
+                    <div className='title'>
+                        <div>{props.task.name}</div> 
+                        <div className='priority'>Priority: {props.task.priority}</div>
+                    </div>
+                    <div className='date-time'>
+                        <div>{props.day}</div>
+                        <div className='time-block'>{props.start} - {props.end}</div>
+                    </div>
                 </DialogTitle>
                 <DialogContent>
                     <h3>Description</h3>
@@ -95,6 +107,9 @@ function InfoDialog(props) {
 
 export default function Task(props) {
     const [open, setOpen] = React.useState(false);
+    const [startTime, setStartTime] = React.useState(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+    const [endTime, setEndTime] = React.useState(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+    const [day, setDay] = React.useState(props.day ? DateTime.fromISO(props.day).toLocaleString(DateTime.DATE_SHORT) : null);//format(parseISO(props.day), 'MM/dd/yyyy'));
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -111,6 +126,7 @@ export default function Task(props) {
 
     useEffect(() => {
         console.log("props:", props);
+        console.log("DAY", day);
     }, []);
 
     return (
@@ -126,7 +142,7 @@ export default function Task(props) {
                             </FormGroup>  
                         </div>
                         <div className='task-title'><p>{props.name}</p></div> 
-                        <div className='task-time-frame'><p>{props.start} <span>-</span> {props.end}</p></div>
+                        <div className='task-time-frame'><p>{startTime} <span>-</span> {endTime}</p></div>
                     </div>
                     <div className='expand-icon'>
                         <IconButton aria-label="expand" onClick={handleClickOpen}>
@@ -135,37 +151,49 @@ export default function Task(props) {
                     </div>
                 </div>
             </Card>
-            <InfoDialog open={open} onClose={handleClose} task={props}/>
+            <InfoDialog open={open} onClose={handleClose} task={props} start={startTime} end={endTime} day={day}/>
         </>
     );
 }
 
-
-/*function DeleteDialog(props) {
-    const { onClose, open } = props;
-
-    const handleClose = () => {
-        onClose()
-    }
-
-    const deleteTask = () => {
-        // trigger db delete
-        onClose();
-    }
-
-    return (
-        <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>
-                Are you sure you want to delete?
-            </DialogTitle>
-            <DialogActions>
-                <Button onClick={deleteTask}>Yes</Button>
-                <Button onClick={handleClose}>No</Button>
-            </DialogActions>
-        </Dialog>
-    )
-}*/
+/*
+<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+    <CardContent sx={{ flex: '1 0 auto' }}>
+        <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <FormControlLabel control={
+                <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
+            } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
+        </FormGroup>
+    </CardContent>
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Typography variant="h5" component="div" gutterBottom>{props.name}</Typography>
+        <Typography variant="h5" component="div" gutterBottom>{props.name}</Typography>
+    </Box>
+</Box>
+<CardActions sx={{ display: 'flex' }}>
+    <IconButton aria-label="expand" onClick={handleClickOpen}>
+        <DensityMediumIcon className='icon'/>
+    </IconButton>
+</CardActions>
 
 
-// <DeleteDialog onClose={handleDeleteClose} open={openDelete}></DeleteDialog>
-// <Badge badgeContent={props.priority} color="primary"></Badge>
+<div className='card-face_container'>
+    <div className='task-info'>
+        <div className='task-id'>
+            <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <FormControlLabel control={
+                    <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
+                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
+            </FormGroup>  
+        </div>
+        <div className='task-title'><p>{props.name}</p></div> 
+        <div className='task-time-frame'><p>{props.start} <span>-</span> {props.end}</p></div>
+    </div>
+    <div className='expand-icon'>
+        <IconButton aria-label="expand" onClick={handleClickOpen}>
+            <DensityMediumIcon className='icon'/>
+        </IconButton>
+    </div>
+</div>
+
+*/

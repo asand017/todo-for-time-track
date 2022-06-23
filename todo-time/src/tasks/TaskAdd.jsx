@@ -12,7 +12,9 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import { useFormik } from 'formik';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DateTime } from 'luxon';
 import './TaskAdd.css';
@@ -21,6 +23,7 @@ export default function TaskAdd(props) {
     const [open, setOpen] = useState(false);
     const [startTime, setStartTime] = useState(0);
     const [endTime, setEndTime] = useState(0);
+    const [value, setValue] = useState(null);
 
     const validate = (values, props) => {
         const errors = {};
@@ -50,7 +53,8 @@ export default function TaskAdd(props) {
                 description: values.description,
                 priority: values.priority,
                 start_time: startTime.toLocaleString(DateTime.TIME_24_SIMPLE),
-                end_time: endTime.toLocaleString(DateTime.TIME_24_SIMPLE)
+                end_time: endTime.toLocaleString(DateTime.TIME_24_SIMPLE),
+                day: value
             });
         }
     })
@@ -105,6 +109,16 @@ export default function TaskAdd(props) {
                             value={formik.values.priority}
                             onChange={formik.handleChange}
                             error={formik.touched.priority && Boolean(formik.errors.priority)}/>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label="Date"
+                                value={value}
+                                onChange={(newValue) => {
+                                    setValue(newValue);
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterLuxon}>
                             <TimePicker
                                 label="Start Time"

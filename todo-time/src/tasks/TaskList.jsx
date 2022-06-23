@@ -28,6 +28,7 @@ export default function TaskList(props){
                     priority={todo.priority} 
                     start={todo.start_time}
                     end={todo.end_time}
+                    day={todo.day}
                 />
             ))}
         </Stack>

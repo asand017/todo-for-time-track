@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import FormGroup from '@mui/material/FormGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { Dialog, DialogTitle, DialogActions, DialogContent, DialogContentText } from '@mui/material';
@@ -17,6 +17,7 @@ export default function DialogForm(props) {
     const { onClose, open, task } = props;
     const [startTime, setStartTime] = useState(DateTime.fromFormat(task.start, 'TT'));
     const [endTime, setEndTime] = useState(DateTime.fromFormat(task.end, 'TT'));
+    const [dateValue, setDateValue] = useState(task.day);
 
     const validate = (values, props) => {
         const errors = {};
@@ -38,7 +39,8 @@ export default function DialogForm(props) {
             description: task.description,
             priority: task.priority,
             startTime: startTime,
-            endTime: endTime
+            endTime: endTime,
+            day: dateValue
         },
         validate: validate,
         onSubmit: (values) => {
@@ -52,7 +54,7 @@ export default function DialogForm(props) {
 
     useEffect(() => {
         console.log(task);
-        console.log(startTime, endTime);
+        console.log(startTime, endTime, dateValue);
     }, [])
 
     return (
@@ -88,6 +90,16 @@ export default function DialogForm(props) {
                             value={formik.values.priority}
                             onChange={formik.handleChange}
                             error={formik.touched.priority && Boolean(formik.errors.priority)}/>
+                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <DatePicker
+                                label="Date"
+                                value={dateValue}
+                                onChange={(newValue) => {
+                                    setDateValue(newValue);
+                                }}
+                                renderInput={(params) => <TextField {...params} />}
+                            />
+                        </LocalizationProvider>
                         <LocalizationProvider dateAdapter={AdapterLuxon}>
                             <TimePicker
                                 label="Start Time"
