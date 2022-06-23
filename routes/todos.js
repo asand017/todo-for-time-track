@@ -19,3 +19,15 @@ router.post('/addTodo', async (req, res) => {
     const { rows } = await db.query(text, values)
     res.send(rows[0])
 })
+
+router.put('/updateTodo/:id', async (req, res) => {
+    console.log("updating todo:", req.query, req.params)
+    res.send("update request received")
+})
+
+router.delete('/deleteTodo/:id', async (req, res) => {
+    console.log("deleting todo:", req.query, req.params)
+    res.send("delete request received")
+})
+
+

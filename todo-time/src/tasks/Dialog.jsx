@@ -14,8 +14,8 @@ export default function DialogComponent(props) {
 
     const triggerTask = () => {
         // trigger db delete
-        props.handleAction();
-        //onClose();
+        props.handleAction(props.no);
+        handleClose();
     }
 
     return (

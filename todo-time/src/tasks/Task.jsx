@@ -32,12 +32,12 @@ function InfoDialog(props) {
     }
 
     const handleDeleteClose = () => {
-        handleClose();
+        //handleClose();
         setOpenDelete(false);
     }
 
     const handleEditClose = () => {
-        handleClose();
+        //handleClose();
         setEdit(false);
     }
 
@@ -49,12 +49,28 @@ function InfoDialog(props) {
         setEdit(true);
     }
 
-    const sendUpdate = (values) => {
-        console.log("send update to db", values);
+    const sendUpdate = async (values) => {
+        try {
+            console.log("send update to db at id="+values.id, values);
+            const td = await props.update.mutateAsync(values);
+            console.log(td);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            handleClose();
+        }
     }
 
-    const sendDelete = () => {
-        console.log("send delete to db");
+    const sendDelete = async (id) => {
+        try {
+            console.log("send delete to db at id="+id);
+            const td = await props.del.mutateAsync(id);
+            console.log(td);
+        } catch (error) {
+            console.log(error);
+        } finally {
+            handleClose();
+        }
     }
 
     useEffect(() => {
@@ -95,6 +111,7 @@ function InfoDialog(props) {
                 />
             <DialogComponent onClose={handleDeleteClose} 
                 open={openDelete} 
+                no={props.task.no}
                 title="Delete Task"
                 content="Are you sure you want to delete?"
                 action_button_text="Yes"
@@ -151,7 +168,7 @@ export default function Task(props) {
                     </div>
                 </div>
             </Card>
-            <InfoDialog open={open} onClose={handleClose} task={props} start={startTime} end={endTime} day={day}/>
+            <InfoDialog open={open} onClose={handleClose} task={props} start={startTime} end={endTime} day={day} del={props.del} update={props.update}/>
         </>
     );
 }

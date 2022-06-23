@@ -29,6 +29,8 @@ export default function TaskList(props){
                     start={todo.start_time}
                     end={todo.end_time}
                     day={todo.day}
+                    del={props.del}
+                    update={props.update}
                 />
             ))}
         </Stack>

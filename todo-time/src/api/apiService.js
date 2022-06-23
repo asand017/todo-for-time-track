@@ -10,7 +10,15 @@ if(process.env.NODE_ENV === "development"){
 //console.log(api_url);
 
 export const getTodos = () => {
-    return axios.get(api_url+'/fetchTodos').then((data) => {
+    return axios.get( api_url + '/fetchTodos' ).then((data) => {
+        console.log(data);
+        return data;
+    })
+}
+
+export const deleteTodo = (id) => {
+    console.log("deleting task w/ id=" + id);
+    return axios.delete( api_url + '/deleteTodo/' + id).then((data) => {
         console.log(data);
         return data;
     })
@@ -18,7 +26,17 @@ export const getTodos = () => {
 
 export const addTodo = async (parms) => {
     console.log(parms);
-    const { response } = await axios.post(api_url+'/addTodo', {}, {headers: {
+    const { response } = await axios.post( api_url + '/addTodo', {}, { headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }, params: parms,
+    });
+    return response;
+}
+
+export const updateTodo = async (parms) => {
+    console.log("updating todo w/ id=" + parms.id, parms);
+    const { response } = await axios.put( api_url + '/updateTodo/' + parms.id, {}, { headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
         }, params: parms,

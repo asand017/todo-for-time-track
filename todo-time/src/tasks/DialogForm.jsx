@@ -35,6 +35,7 @@ export default function DialogForm(props) {
 
     const formik = useFormik({
         initialValues: {
+            id: task.no,
             name: task.name, 
             description: task.description,
             priority: task.priority,
@@ -45,6 +46,7 @@ export default function DialogForm(props) {
         validate: validate,
         onSubmit: (values) => {
             props.submitCallback(values);
+            handleClose();
         }
     })
 
