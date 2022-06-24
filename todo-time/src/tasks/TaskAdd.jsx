@@ -68,11 +68,11 @@ export default function TaskAdd(props) {
     }
 
     useEffect(() => {
-        console.log("Start Time: ", startTime);
+        //console.log("Start Time: ", startTime);
     }, [startTime]);
 
     useEffect(() => {
-        console.log("End Time: ", endTime);
+        //console.log("End Time: ", endTime);
     }, [endTime]);
 
     return (

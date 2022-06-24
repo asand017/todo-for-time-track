@@ -4,22 +4,17 @@ import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
 import Checkbox from '@mui/material/Checkbox';
-import Container from '@mui/material/Container';
 import DensityMediumIcon from '@mui/icons-material/DensityMedium';
 import IconButton from '@mui/material/IconButton';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
 import { DateTime } from 'luxon';
 import './Task.css';
 import { Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
 import DialogComponent from './Dialog';
 import DialogForm from './DialogForm';
-import { format, parse, parseISO } from 'date-fns';
 
 function InfoDialog(props) {
     const { onClose, open } = props;
@@ -74,7 +69,7 @@ function InfoDialog(props) {
     }
 
     useEffect(() => {
-        console.log("task info from dialog", props.task)
+        //console.log("task info from dialog", props.task)
     }, []);
 
     return (
@@ -142,8 +137,8 @@ export default function Task(props) {
     }
 
     useEffect(() => {
-        console.log("props:", props);
-        console.log("DAY", day);
+        //console.log("props:", props);
+        //console.log(day);
     }, []);
 
     return (

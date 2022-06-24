@@ -13,7 +13,6 @@ export default function DialogComponent(props) {
     }
 
     const triggerTask = () => {
-        // trigger db delete
         props.handleAction(props.no);
         handleClose();
     }

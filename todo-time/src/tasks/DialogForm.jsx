@@ -64,12 +64,12 @@ export default function DialogForm(props) {
     }
 
     useEffect(() => {
-        console.log(task);
-        console.log(startTime, endTime, dateValue);
+        //console.log(task);
+        //console.log(startTime, endTime, dateValue);
     }, [])
 
     useEffect(() => {
-        console.log("new date set", dateValue);
+        //console.log("new date set", dateValue);
     }, [dateValue])
 
     return (
