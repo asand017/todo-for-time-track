@@ -6,7 +6,7 @@ module.exports = router
 
 router.get('/fetchTodos', async (req, res) => {
     //console.log(req.query)
-    const { rows } = await db.query('SELECT * FROM tasks')
+    const { rows } = await db.query('SELECT * FROM tasks ORDER BY start_time')
     //console.log("fetching rows: ", rows)
     res.send(rows)
 })
