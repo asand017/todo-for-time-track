@@ -18,5 +18,9 @@
     "express-promise-router": "^4.1.1",
     "pg": "^8.7.3",
     "pg-format": "^1.0.4"
+  },
+  "devDependencies": {
+    "cypress": "^10.3.0",
+    "react-test-renderer": "^18.2.0"
   }
 }
