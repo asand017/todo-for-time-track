@@ -48,6 +48,7 @@ function Todos() {
 
     return (
         <Container maxWidth='lg'>
+            <h1>Time Tracker</h1>
             <TaskAdd mutation={mutation} />
             <TaskList client={queryClient} query={get} del={del} update={updateMutation}/>
         </Container>

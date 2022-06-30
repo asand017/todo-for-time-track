@@ -1,2 +1,2 @@
 # todo-for-time-track
-To-Do application for time tracking 
+To-do list application for time tracking 

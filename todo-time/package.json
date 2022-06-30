@@ -52,6 +52,7 @@
   },
   "devDependencies": {
     "@testing-library/react": "^13.3.0",
-    "jest": "^28.1.1"
+    "jest": "^28.1.1",
+    "msw": "^0.42.3"
   }
 }
