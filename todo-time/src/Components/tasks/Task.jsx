@@ -10,9 +10,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import CloseIcon from '@mui/icons-material/Close';
 import { DateTime } from 'luxon';
 import './Task.css';
-import { Dialog, DialogTitle, DialogActions, DialogContent } from '@mui/material';
-import DialogComponent from './Dialog';
-import DialogForm from './DialogForm';
+import { DialogTitle, DialogActions, DialogContent } from '@mui/material';
+import DialogComponent from '../dialog/Dialog';
+import DialogForm from '../dialog/DialogForm';
 
 function InfoDialog(props) {
     const { onClose, open } = props;
@@ -66,13 +66,9 @@ function InfoDialog(props) {
         }
     }
 
-    useEffect(() => {
-        //console.log("task info from dialog", props.task)
-    }, []);
-
     return (
         <>
-            <Dialog onClose={handleClose} open={open}>
+            <DialogComponent onClose={handleClose} open={open}>
                 <DialogTitle>
                     <div className='title'>
                         <div>{props.task.name}</div> 
@@ -94,7 +90,8 @@ function InfoDialog(props) {
                     <Button onClick={handleEdit}>Edit</Button>
                     <Button onClick={handleDelete}>Delete</Button>
                 </DialogActions>
-            </Dialog>
+            </DialogComponent>
+
             <DialogForm onClose={handleEditClose}
                 open={edit}
                 task={props.task}
@@ -102,18 +99,33 @@ function InfoDialog(props) {
                 action_button_text="Update"
                 close_button_text="Cancel"
                 />
-            <DialogComponent onClose={handleDeleteClose} 
+
+            <DialogComponent onClose={handleDeleteClose} open={openDelete}>
+                <DialogTitle>
+                    Delete Task
+                </DialogTitle>
+                <DialogContent>
+                    Are you sure you want to delete?
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => sendDelete(props.task.no)}>Yes</Button>
+                    <Button onClick={handleDeleteClose}>No</Button>
+                </DialogActions>    
+            </DialogComponent>
+        </>
+    )
+}
+
+/*
+<DialogComponent onClose={handleDeleteClose} 
                 open={openDelete} 
                 no={props.task.no}
                 title="Delete Task"
                 content="Are you sure you want to delete?"
                 action_button_text="Yes"
                 close_button_text="No"
-                handleAction={sendDelete}
-                />
-        </>
-    )
-}
+                handleAction={sendDelete}/>
+*/
 
 export default function Task(props) {
     const [open, setOpen] = React.useState(false);

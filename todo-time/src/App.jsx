@@ -9,8 +9,8 @@ import {
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { getTodos, addTodo, deleteTodo, updateTodo } from './api/apiService';
 import Container from '@mui/material/Container';
-import TaskAdd from './tasks/TaskAdd';
-import TaskList from './tasks/TaskList';
+import TaskAdd from './Components/tasks/TaskAdd';
+import TaskList from './Components/tasks/TaskList';
 
 const queryClient = new QueryClient();
 

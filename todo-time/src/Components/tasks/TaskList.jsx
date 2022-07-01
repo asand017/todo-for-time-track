@@ -65,19 +65,3 @@ export default function TaskList(props){
         </Stack>
     )
 }
-
-/*
-{data.data.map(todo => (
-                <Task key={todo.id} 
-                    no={todo.id}
-                    name={todo.name} 
-                    description={todo.description} 
-                    priority={todo.priority} 
-                    start={todo.start_time}
-                    end={todo.end_time}
-                    day={todo.day}
-                    del={props.del}
-                    update={props.update}
-                />
-            ))}
-*/
