@@ -17,6 +17,12 @@ mountRoutes(app)
 
 app.use('/', express.static(path.resolve(__dirname, "./todo-time/build")))
 
+app.use('/login', (req, res) => {
+    res.send({
+        token: 'testing123'
+    });
+});
+
 if (process.env.NODE_ENV === 'development') {
     app.listen(port, () => {
         console.log('server running on port:', port)
