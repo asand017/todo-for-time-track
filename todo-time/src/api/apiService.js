@@ -34,22 +34,22 @@ export const addTodo = async (parms) => {
     return response;
 }
 
-export const updateTodo = async (parms) => {
-    //console.log("updating todo w/ id=" + parms.id, parms);
-    const { response } = await axios.put( api_url + '/updateTodo/' + parms.id, {}, { headers: {
+export const updateTodo = async (params) => {
+    //console.log("updating todo w/ id=" + params.id, params);
+    const { response } = await axios.put( api_url + '/updateTodo/' + params.id, {}, { headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
-        }, params: parms,
+        }, params: params,
     });
     return response;
 }
 
-export const completeTodo = async (parms) => {
-    console.log("toggle task complete:", parms);
-    const { response } = await axios.put( api_url + '/completeTodo/' + parms.id, {}, { headers : {
+export const completeTodo = async (params) => {
+    console.log("toggle task complete:", params);
+    const { response } = await axios.put( api_url + '/completeTodo/' + params.id, {}, { headers : {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
-        }, params: parms
+        }, params: params
     });
     return response;
 }

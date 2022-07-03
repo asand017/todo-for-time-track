@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import TaskFormDialog from '../dialog/TaskFormDialog';
+import TaskFormDialog from '../../Dialog/TaskFormDialog';
 import './TaskAdd.css';
 
 export default function TaskAdd(props) {

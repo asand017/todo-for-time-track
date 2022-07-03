@@ -10,11 +10,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import CloseIcon from '@mui/icons-material/Close';
 import { DateTime } from 'luxon';
 import { DialogTitle, DialogActions, DialogContent } from '@mui/material';
-import DialogComponent from '../dialog/Dialog';
-import TaskFormDialog from '../dialog/TaskFormDialog';
+import DialogComponent from '../../Dialog/Dialog';
+import TaskFormDialog from '../../Dialog/TaskFormDialog';
 import './Task.css';
 import { useContext } from 'react';
-import { DeleteContext, UpdateContext, CompleteTodoContext } from '../../Contexts.js';
+import { DeleteContext, UpdateContext, CompleteTodoContext } from '../../../Contexts.js';
 
 const priorityColors = {
     1: 'green priority',

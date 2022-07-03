@@ -1,71 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import {
-    useQuery,
-    useMutation,
-    useQueryClient,
-    QueryClient,
-    QueryClientProvider
-  } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
-import { getTodos, addTodo, deleteTodo, updateTodo, completeTodo } from './api/apiService';
-import Container from '@mui/material/Container';
-import TaskAdd from './Components/tasks/TaskAdd';
-import TaskList from './Components/tasks/TaskList';
-import { DeleteContext, UpdateContext, CompleteTodoContext } from './Contexts.js';
-
-const queryClient = new QueryClient();
+import React, { useState } from 'react';
+import './App.css';
+import Dashboard from './components/Dashboard/Dashboard';
+import Preferences from './components/Preferences/Preferences';
+import Login from './components/Login/Login';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import useToken from './useToken';
 
 function App() {
+    const { token, setToken } = useToken();
+
+    if(!token){
+        return <Login setToken={setToken}/>
+    }
+
     return (
-        <QueryClientProvider client={queryClient}>
-            <Todos />
-            <ReactQueryDevtools initialIsOpen={false}/>
-        </QueryClientProvider>
+        <div className="wrapper">
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={<Home/>}>
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/preferences" element={<Preferences />} />
+                    </Route>
+                </Routes>
+            </BrowserRouter>
+        </div>
     )
 }
 
-function Todos() {
-    const queryClient = useQueryClient();
-
-    const get = useQuery('todos', getTodos);
-
-    const del = useMutation(deleteTodo, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('todos')
-        },
-    });
-
-    const mutation = useMutation(addTodo, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('todos')
-        },
-    })
-
-    const updateMutation = useMutation(updateTodo, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('todos')
-        },
-    })
-
-    const markTodoComplete = useMutation(completeTodo, {
-        onSuccess: () => {
-            queryClient.invalidateQueries('todos')
-        },
-    })
-
-    return (
-        <Container maxWidth='lg'>
+function Home() {
+    return(
+        <div>
             <h1>Time Tracker</h1>
-            <TaskAdd mutation={mutation} />
-            <DeleteContext.Provider value={del}>
-                <UpdateContext.Provider value={updateMutation}>
-                    <CompleteTodoContext.Provider value={markTodoComplete}>
-                        <TaskList query={get}/>
-                    </CompleteTodoContext.Provider>
-                </UpdateContext.Provider>
-            </DeleteContext.Provider>  
-        </Container>
+        </div>
     )
-}  
+}
 
 export default App;
