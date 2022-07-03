@@ -9,10 +9,18 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CloseIcon from '@mui/icons-material/Close';
 import { DateTime } from 'luxon';
-import './Task.css';
 import { DialogTitle, DialogActions, DialogContent } from '@mui/material';
 import DialogComponent from '../dialog/Dialog';
-import DialogForm from '../dialog/DialogForm';
+import TaskFormDialog from '../dialog/TaskFormDialog';
+import './Task.css';
+import { useContext } from 'react';
+import { DeleteContext, UpdateContext, CompleteTodoContext } from '../../Contexts.js';
+
+const priorityColors = {
+    1: 'green priority',
+    2: 'yellow priority',
+    3: 'red priority'
+}
 
 function InfoDialog(props) {
     const { onClose, open } = props;
@@ -71,9 +79,12 @@ function InfoDialog(props) {
             <DialogComponent onClose={handleClose} open={open}>
                 <DialogTitle>
                     <div className='title'>
-                        <div>{props.task.name}</div> 
-                        <div className='priority'>Priority: {props.task.priority}</div>
+                        <div>{props.task.name}</div>
+                        <IconButton aria-label="expand" onClick={handleClose} className="close-button">
+                            <CloseIcon className='icon'/>
+                        </IconButton>
                     </div>
+                    <div className={priorityColors[props.task.priority]}>Priority: {props.task.priority}</div>
                     <div className='date-time'>
                         <div>{props.day}</div>
                         <div className='time-block'>{props.start} - {props.end}</div>
@@ -83,23 +94,18 @@ function InfoDialog(props) {
                     <h3>Description</h3>
                     <p>{props.task.description}</p>
                 </DialogContent>
-                <DialogActions>
-                    <IconButton aria-label="expand" onClick={handleClose}>
-                        <CloseIcon className='icon'/>
-                    </IconButton>
+                <DialogActions sx={{paddingLeft: '24px', paddingRight: '24px'}}>
                     <Button onClick={handleEdit}>Edit</Button>
                     <Button onClick={handleDelete}>Delete</Button>
                 </DialogActions>
             </DialogComponent>
-
-            <DialogForm onClose={handleEditClose}
+            <TaskFormDialog onClose={handleEditClose}
                 open={edit}
                 task={props.task}
                 submitCallback={sendUpdate}
                 action_button_text="Update"
                 close_button_text="Cancel"
                 />
-
             <DialogComponent onClose={handleDeleteClose} open={openDelete}>
                 <DialogTitle>
                     Delete Task
@@ -116,22 +122,15 @@ function InfoDialog(props) {
     )
 }
 
-/*
-<DialogComponent onClose={handleDeleteClose} 
-                open={openDelete} 
-                no={props.task.no}
-                title="Delete Task"
-                content="Are you sure you want to delete?"
-                action_button_text="Yes"
-                close_button_text="No"
-                handleAction={sendDelete}/>
-*/
-
 export default function Task(props) {
     const [open, setOpen] = React.useState(false);
     const [startTime, setStartTime] = React.useState(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
     const [endTime, setEndTime] = React.useState(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
     const [day, setDay] = React.useState(props.day ? DateTime.fromISO(props.day).toLocaleString(DateTime.DATE_SHORT) : null);//format(parseISO(props.day), 'MM/dd/yyyy'));
+    const [done, setDone] = React.useState(false);
+    const delte = useContext(DeleteContext);
+    const update = useContext(UpdateContext);
+    const complete = useContext(CompleteTodoContext);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -142,25 +141,37 @@ export default function Task(props) {
     }
 
     // update task productivity flag
-    const handleSetProductivity = () => {
+    /*const handleSetProductivity = () => {
         
+    }*/
+
+    const toggleCompletedTask = async () => {
+        let d = !done;
+        setDone(d);
+        try {
+            const td = await complete.mutateAsync({
+                id: props.no,
+                complete: d
+            });
+        } catch (error){
+            console.log(error);
+        }
     }
 
     useEffect(() => {
-        //console.log("props:", props);
-        //console.log(day);
-    }, []);
+        console.log(done);
+    }, [done]);
 
     return (
         <>
             <Card>
                 <div className='card-face_container'>
                     <div className='task-info'>
-                        <div className='task-id'>
+                        <div className='task-complete'>
                             <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <FormControlLabel control={
-                                    <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
-                                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
+                                    <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={toggleCompletedTask}/>
+                                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}} value={done}/>
                             </FormGroup>  
                         </div>
                         <div className='task-title'><p>{props.name}</p></div> 
@@ -173,49 +184,13 @@ export default function Task(props) {
                     </div>
                 </div>
             </Card>
-            <InfoDialog open={open} onClose={handleClose} task={props} start={startTime} end={endTime} day={day} del={props.del} update={props.update}/>
+            <InfoDialog open={open} onClose={handleClose} 
+                task={props} 
+                start={startTime} 
+                end={endTime} 
+                day={day} 
+                del={delte} 
+                update={update}/>
         </>
     );
 }
-
-/*
-<Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-    <CardContent sx={{ flex: '1 0 auto' }}>
-        <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-            <FormControlLabel control={
-                <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
-            } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
-        </FormGroup>
-    </CardContent>
-    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-        <Typography variant="h5" component="div" gutterBottom>{props.name}</Typography>
-        <Typography variant="h5" component="div" gutterBottom>{props.name}</Typography>
-    </Box>
-</Box>
-<CardActions sx={{ display: 'flex' }}>
-    <IconButton aria-label="expand" onClick={handleClickOpen}>
-        <DensityMediumIcon className='icon'/>
-    </IconButton>
-</CardActions>
-
-
-<div className='card-face_container'>
-    <div className='task-info'>
-        <div className='task-id'>
-            <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                <FormControlLabel control={
-                    <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={handleSetProductivity}/>
-                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
-            </FormGroup>  
-        </div>
-        <div className='task-title'><p>{props.name}</p></div> 
-        <div className='task-time-frame'><p>{props.start} <span>-</span> {props.end}</p></div>
-    </div>
-    <div className='expand-icon'>
-        <IconButton aria-label="expand" onClick={handleClickOpen}>
-            <DensityMediumIcon className='icon'/>
-        </IconButton>
-    </div>
-</div>
-
-*/

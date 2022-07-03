@@ -7,10 +7,11 @@ import {
     QueryClientProvider
   } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
-import { getTodos, addTodo, deleteTodo, updateTodo } from './api/apiService';
+import { getTodos, addTodo, deleteTodo, updateTodo, completeTodo } from './api/apiService';
 import Container from '@mui/material/Container';
 import TaskAdd from './Components/tasks/TaskAdd';
 import TaskList from './Components/tasks/TaskList';
+import { DeleteContext, UpdateContext, CompleteTodoContext } from './Contexts.js';
 
 const queryClient = new QueryClient();
 
@@ -46,11 +47,23 @@ function Todos() {
         },
     })
 
+    const markTodoComplete = useMutation(completeTodo, {
+        onSuccess: () => {
+            queryClient.invalidateQueries('todos')
+        },
+    })
+
     return (
         <Container maxWidth='lg'>
             <h1>Time Tracker</h1>
             <TaskAdd mutation={mutation} />
-            <TaskList client={queryClient} query={get} del={del} update={updateMutation}/>
+            <DeleteContext.Provider value={del}>
+                <UpdateContext.Provider value={updateMutation}>
+                    <CompleteTodoContext.Provider value={markTodoComplete}>
+                        <TaskList query={get}/>
+                    </CompleteTodoContext.Provider>
+                </UpdateContext.Provider>
+            </DeleteContext.Provider>  
         </Container>
     )
 }  

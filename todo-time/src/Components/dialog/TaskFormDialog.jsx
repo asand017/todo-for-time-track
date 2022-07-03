@@ -11,14 +11,20 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { Dialog, DialogTitle, DialogContent } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormControl';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import { DialogTitle, DialogContent } from '@mui/material';
 import DialogComponent from './Dialog';
 
-export default function DialogForm(props) {
+export default function TaskFormDialog(props) {
     const { onClose, open, task } = props;
-    const [startTime, setStartTime] = useState(DateTime.fromFormat(task.start, 'TT'));
-    const [endTime, setEndTime] = useState(DateTime.fromFormat(task.end, 'TT'));
-    const [dateValue, setDateValue] = useState(task.day);
+    const [startTime, setStartTime] = useState(task.start ? DateTime.fromFormat(task.start, 'TT') : 0);
+    const [endTime, setEndTime] = useState(task.end ? DateTime.fromFormat(task.end, 'TT') : 0);
+    const [dateValue, setDateValue] = useState(task.day ? task.day : null);
+    const [priority, setPriority] = useState(task.priority ? task.priority : 1);
 
     const validate = (values, props) => {
         const errors = {};
@@ -27,31 +33,28 @@ export default function DialogForm(props) {
 
         if (!values.description) 
             errors.description = 'Required';
-
-        if (!values.priority) 
-            errors.priority = 'Required'; 
         
         return errors;
     }
 
     const formik = useFormik({
         initialValues: {
-            id: task.no,
-            name: task.name, 
-            description: task.description,
-            priority: task.priority,
+            id: task.no ? task.no : null,
+            name: task.name ? task.name : "", 
+            description: task.description ? task.description : "",
+            priority: priority,
             startTime: startTime,
             endTime: endTime,
             day: dateValue
         },
         validate: validate,
         onSubmit: (values) => {
-            console.log("UPDATEING TODO");
+            console.log("PROCESSING TODO");
             props.submitCallback({
                 id: values.id,
                 name: values.name,
                 description: values.description,
-                priority: values.priority,
+                priority: priority,
                 start_time: startTime.toLocaleString(DateTime.TIME_24_SIMPLE),
                 end_time: endTime.toLocaleString(DateTime.TIME_24_SIMPLE),
                 day: dateValue
@@ -94,12 +97,18 @@ export default function DialogForm(props) {
                         value={formik.values.description}
                         onChange={formik.handleChange}
                         error={formik.touched.description && Boolean(formik.errors.description)}/>
-                    <TextField required id="priority" 
-                        name="priority" 
-                        label="Priority" 
-                        value={formik.values.priority}
-                        onChange={formik.handleChange}
-                        error={formik.touched.priority && Boolean(formik.errors.priority)}/>
+                    <FormControl id="priority" error={formik.touched.priority && Boolean(formik.errors.priority)}>
+                        <FormLabel id="priority-row-radio-buttons-group-label">Priority</FormLabel>
+                        <RadioGroup row name="row-radio-buttons-group"
+                            value={priority}
+                            onChange={(event) => {
+                                setPriority(event.target.value)
+                            }}>
+                            <FormControlLabel value="1" control={<Radio/>} label="1" />
+                            <FormControlLabel value="2" control={<Radio/>} label="2" />
+                            <FormControlLabel value="3" control={<Radio/>} label="3" />
+                        </RadioGroup>
+                    </FormControl>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
                             label="Date"
@@ -141,5 +150,11 @@ export default function DialogForm(props) {
 }
 
 /*
+<TextField required id="priority" 
+                        name="priority" 
+                        label="Priority" 
+                        value={formik.values.priority}
+                        onChange={formik.handleChange}
+                        error={formik.touched.priority && Boolean(formik.errors.priority)}/>
 
 */

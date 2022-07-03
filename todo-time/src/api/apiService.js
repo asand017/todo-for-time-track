@@ -43,3 +43,13 @@ export const updateTodo = async (parms) => {
     });
     return response;
 }
+
+export const completeTodo = async (parms) => {
+    console.log("toggle task complete:", parms);
+    const { response } = await axios.put( api_url + '/completeTodo/' + parms.id, {}, { headers : {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }, params: parms
+    });
+    return response;
+}
