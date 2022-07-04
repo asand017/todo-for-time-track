@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Login.css';
 
 async function loginUser(creds) {
-    return fetch('http://localhost:3001/login', {
+    return fetch('http://localhost:3001/users/login', {
         method: 'POST',
         header: {
             'Content-Type': 'application/json'
@@ -37,10 +37,11 @@ export default function Login({ setToken }) {
                     <p>Password</p>
                     <input type="password" onChange={(e) => setPassword(e.target.value)}/>
                 </label>
-                <div>
+                <div style={{padding: '20px'}}>
                     <button type="submit">Submit</button>
                 </div>
             </form>
+            <a>Don't have an account? Register here</a>
         </div>
     )
 }

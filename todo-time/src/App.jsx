@@ -18,9 +18,7 @@ function App() {
             <h1>Time Tracker</h1>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Dashboard />}>
-                        <Route path="/preferences" element={<Preferences />} />
-                    </Route>
+                    <Route path="/" element={<Dashboard />}></Route>
                 </Routes>
             </BrowserRouter>
         </div>
