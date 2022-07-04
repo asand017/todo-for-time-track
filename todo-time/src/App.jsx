@@ -15,22 +15,14 @@ function App() {
 
     return (
         <div className="wrapper">
+            <h1>Time Tracker</h1>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Home/>}>
-                        <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/" element={<Dashboard />}>
                         <Route path="/preferences" element={<Preferences />} />
                     </Route>
                 </Routes>
             </BrowserRouter>
-        </div>
-    )
-}
-
-function Home() {
-    return(
-        <div>
-            <h1>Time Tracker</h1>
         </div>
     )
 }
