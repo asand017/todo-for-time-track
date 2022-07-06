@@ -1,10 +1,11 @@
 const Router = require('express-promise-router')
 const router = new Router()
 const db = require('../db')
+const auth = require('../middleware/auth')
 
 module.exports = router
 
-router.get('/fetchTodos', async (req, res) => {
+router.get('/fetchTodos', auth, async (req, res) => {
     const { rows } = await db.query('SELECT * FROM tasks ORDER BY start_time')
     res.send(rows)
 })
