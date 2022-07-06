@@ -7,6 +7,7 @@ module.exports = router
 
 router.get('/fetchTodos', auth, async (req, res) => {
     const { rows } = await db.query('SELECT * FROM tasks ORDER BY start_time')
+    console.log("rows (fetchTodos)", rows)
     res.send(rows)
 })
 
@@ -27,7 +28,7 @@ router.put('/updateTodo/:id', async (req, res) => {
 })
 
 router.put('/completeTodo/:id', async (req, res) => {
-    console.log(req.query, req.params);
+    console.log("complete todos:", req.query, req.params);
     const text = 'UPDATE tasks SET complete=$2 WHERE id=$1'
     const values = Object.keys(req.query).map((key) => req.query[key])
     const { rows } = await db.query(text, values);

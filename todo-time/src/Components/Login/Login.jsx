@@ -1,28 +1,37 @@
 import React, { useState } from 'react';
+import { login } from '../../api/apiService';
 import PropTypes from 'prop-types';
+import { useNavigate } from "react-router-dom";
 import './Login.css';
 
 async function loginUser(creds) {
-    return fetch('http://localhost:3001/users/login', {
+    /*return fetch('http://localhost:3001/users/login', {
         method: 'POST',
         header: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(creds)
-    }).then(data => data.json())
+    }).then(data => data.json())*/
+    const res = await login(creds);
+    const token = res.data.token;
+    console.log(token);
+    return token;
 }
 
 export default function Login({ setToken }) {
-    const [username, setUserName] = useState();
+    const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    //let navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const token = await loginUser({
-            username,
+            email,
             password
         });
+        console.log(token)
         setToken(token);
+        //navigate("/", { replace: true });
     }
 
     return(
@@ -30,8 +39,8 @@ export default function Login({ setToken }) {
             <h1>Please Log In</h1>
             <form onSubmit={handleSubmit}>
                 <label>
-                    <p>Username</p>
-                    <input type="text" onChange={(e) => setUserName(e.target.value)}/>
+                    <p>Email</p>
+                    <input type="text" onChange={(e) => setEmail(e.target.value)}/>
                 </label>
                 <label>
                     <p>Password</p>

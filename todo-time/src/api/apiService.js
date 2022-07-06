@@ -4,39 +4,50 @@ import axios from 'axios';
 var api_url = "";
 if(process.env.NODE_ENV === "development"){
     api_url = process.env.REACT_APP_DEV_API_URL;
-}else if(process.env.NODE_ENV === "production"){
+}/*else if(process.env.NODE_ENV === "production"){
     api_url = "/todos";
-}
+}*/
 //console.log(api_url);
 
-export const getTodos = () => {
-    return axios.get( api_url + '/fetchTodos' ).then((data) => {
-        //console.log(data);
-        return data;
-    })
-}
-
-export const deleteTodo = (id) => {
-    //console.log("deleting task w/ id=" + id);
-    return axios.delete( api_url + '/deleteTodo/' + id).then((data) => {
-        //console.log(data);
-        return data;
-    })
-}
-
-export const addTodo = async (parms) => {
-    //console.log(parms);
-    const { response } = await axios.post( api_url + '/addTodo', {}, { headers: {
+export const login = async (credentials) => {
+    console.log(credentials);
+    const response = await axios.post( api_url + 'users/login', {}, { headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
-        }, params: parms,
+        }, params: credentials,
+    });
+    console.log(response);
+    return response;
+}
+
+export const getTodos = async () => {
+    return axios.get( api_url + 'todos/fetchTodos' ).then((data) => {
+        console.log(data);
+        return data;
+    })
+}
+
+export const deleteTodo = async (id) => {
+    //console.log("deleting task w/ id=" + id);
+    return await axios.delete( api_url + 'todos/deleteTodo/' + id).then((data) => {
+        //console.log(data);
+        return data;
+    })
+}
+
+export const addTodo = async (params) => {
+    //console.log(parms);
+    const { response } = await axios.post( api_url + 'todos/addTodo', {}, { headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }, params: params,
     });
     return response;
 }
 
 export const updateTodo = async (params) => {
     //console.log("updating todo w/ id=" + params.id, params);
-    const { response } = await axios.put( api_url + '/updateTodo/' + params.id, {}, { headers: {
+    const { response } = await axios.put( api_url + 'todos/updateTodo/' + params.id, {}, { headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
         }, params: params,
@@ -46,7 +57,7 @@ export const updateTodo = async (params) => {
 
 export const completeTodo = async (params) => {
     console.log("toggle task complete:", params);
-    const { response } = await axios.put( api_url + '/completeTodo/' + params.id, {}, { headers : {
+    const { response } = await axios.put( api_url + 'todos/completeTodo/' + params.id, {}, { headers : {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*'
         }, params: params
