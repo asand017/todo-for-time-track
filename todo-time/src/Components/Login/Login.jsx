@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { login } from '../../api/apiService';
 import PropTypes from 'prop-types';
 import './Login.css';
 
-export default function Login({ setToken, handleLogin }) {
+export default function Login({ handleLogin }) {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
 
@@ -29,5 +28,5 @@ export default function Login({ setToken, handleLogin }) {
 }
 
 Login.propTypes = {
-    setToken: PropTypes.func.isRequired
+    handleLogin: PropTypes.func.isRequired
 }

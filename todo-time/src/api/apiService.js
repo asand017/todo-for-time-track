@@ -9,7 +9,8 @@ if(process.env.NODE_ENV === "development"){
 }*/
 //console.log(api_url);
 
-var token = null;
+var token = localStorage.getItem('token');
+var user_id = localStorage.getItem('user_id');
 
 export const login = async (credentials) => {
     console.log(credentials);
@@ -19,12 +20,14 @@ export const login = async (credentials) => {
         }, params: credentials,
     });
     console.log(response);
+    user_id = response.data.id;
+    console.log(user_id);
     return response;
 }
 
 export const getTodos = async (tok) => {
     token = tok;
-    return axios.get( api_url + 'todos/fetchTodos', { headers: {
+    return axios.get( api_url + 'todos/fetchTodos/'+user_id, { headers: {
             'x-access-token': token
         }
     }).then((data) => {
@@ -33,9 +36,9 @@ export const getTodos = async (tok) => {
     })
 }
 
-export const deleteTodo = async (id) => {
+export const deleteTodo = async (task_id) => {
     //console.log("deleting task w/ id=" + id);
-    return await axios.delete( api_url + 'todos/deleteTodo/' + id, { headers: {
+    return await axios.delete( api_url + 'todos/deleteTodo/'+task_id, { headers: {
             'x-access-token': token
         }
     }).then((data) => {
@@ -46,7 +49,7 @@ export const deleteTodo = async (id) => {
 
 export const addTodo = async (params) => {
     //console.log(parms);
-    const { response } = await axios.post( api_url + 'todos/addTodo', {}, { headers: {
+    const { response } = await axios.post( api_url + 'todos/addTodo/'+user_id, {}, { headers: {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
             'x-access-token': token

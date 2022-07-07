@@ -6,7 +6,6 @@ import {
     QueryClient,
     QueryClientProvider
   } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import { getTodos, addTodo, deleteTodo, updateTodo, completeTodo } from '../../api/apiService';
 import Container from '@mui/material/Container';
 import TaskAdd from './Tasks/TaskAdd';
@@ -29,7 +28,6 @@ export default function Dashboard() {
             <h2>Dashboard</h2>
             <QueryClientProvider client={queryClient}>
                 <Todos token={token}/>
-                <ReactQueryDevtools initialIsOpen={false}/>
             </QueryClientProvider>
         </>
     );
