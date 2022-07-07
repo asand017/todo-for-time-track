@@ -1,29 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
 import Dashboard from './components/Dashboard/Dashboard';
-import Preferences from './components/Preferences/Preferences';
-import Login from './components/Login/Login';
-import { Route, Routes, Link, useNavigate, useLocation, Navigate, Outlet } from 'react-router-dom';
-import useToken from './useToken';
+import { Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthProvider';
+import { Home } from './components/Home';
+import { NoMatch } from './NoMatch';
+import { ProtectedRoute } from './auth/ProtectedRoute';
+import { Navigation } from './components/Navigation';
 
 export default function App() {
-    const { token, setToken } = useToken();
-
-    useEffect(() => {
-        console.log("token view from App.js: ", token);
-    }, [token])
-
-    if(!token){
-        return <Login setToken={setToken}/>
-    }
-
     return (
         <AuthProvider>
             <div className="wrapper">
                 <h1>Time Tracker</h1>
-                
+                <Navigation />
                 <Routes>
-                    <Route path="/" element={<Dashboard />}></Route>
+                    <Route index element={<Home />} />
+                    <Route path="home" element={<Home />} />
+                    <Route path="dashboard" element={
+                            <ProtectedRoute>
+                                <Dashboard />
+                            </ProtectedRoute>
+                        } 
+                    />
+                    <Route path="admin" element={
+                            <ProtectedRoute>
+                                <Admin/>
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route path="*" element={<NoMatch />} />
                 </Routes>
               
             </div>
@@ -31,8 +37,10 @@ export default function App() {
     )
 }
 
-function AuthProvider({ children }) {
+const Admin = () => {
     return (
-        {children}
-    );
+        <>
+            <h2> Admin (Protected) </h2>
+        </>
+    )
 }

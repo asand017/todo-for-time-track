@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     useQuery,
     useMutation,
@@ -12,26 +12,34 @@ import Container from '@mui/material/Container';
 import TaskAdd from './Tasks/TaskAdd';
 import TaskList from './Tasks/TaskList';
 import { DeleteContext, UpdateContext, CompleteTodoContext } from '../../Contexts.js';
+import { useAuth } from '../../custom_hooks/useAuth';
 
 const queryClient = new QueryClient();
 
-
 export default function Dashboard() {
+    // get auth token
+    const { token, onLogin, onLogout } = useAuth();
+
+    useEffect(() => {
+        console.log("token: ", token);
+    }, [token]);
+
     return(
         <>
             <h2>Dashboard</h2>
             <QueryClientProvider client={queryClient}>
-                <Todos />
+                <Todos token={token}/>
                 <ReactQueryDevtools initialIsOpen={false}/>
             </QueryClientProvider>
         </>
     );
 }
 
-function Todos() {
+function Todos(props) {
     const queryClient = useQueryClient();
+    const token = props.token;
 
-    const get = useQuery('todos', getTodos);
+    const get = useQuery('todos', () => getTodos(token));
 
     const del = useMutation(deleteTodo, {
         onSuccess: () => {

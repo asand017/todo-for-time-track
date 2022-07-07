@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import { DateTime } from 'luxon';
 import Task from './Task';
+import { useAuth } from '../../../custom_hooks/useAuth';
 
 export default function TaskList(props){
-
+    const { token } = useAuth();
     const { isSuccess, isLoading, isError, data, error } = props.query;
     const [ todosByDate, setTodosByDate ] = useState({});
     const [ taskView, setTaskView ] = useState([])
@@ -31,8 +32,10 @@ export default function TaskList(props){
             console.log(todosByDate);
             let view = [];
             for (const date in todosByDate){
+
                 console.log(date, todosByDate[date]);
                 view.push(<h2 key={date}>{date}</h2>);
+
                 todosByDate[date].forEach(todo => {
                     view.push(<Task key={todo.id} 
                         no={todo.id}
@@ -42,10 +45,9 @@ export default function TaskList(props){
                         start={todo.start_time}
                         end={todo.end_time}
                         day={todo.day}
-                        //del={props.del}
-                        //update={props.update}
                     />)
                 })
+
             }
             setTaskView(view);
         }
@@ -56,6 +58,7 @@ export default function TaskList(props){
     }
 
     if (isError) {
+        console.log(error);
         return <span>Error: {error.message}</span>
     }
 
