@@ -17,17 +17,13 @@ const queryClient = new QueryClient();
 
 export default function Dashboard() {
     // get auth token
-    const { token, onLogin, onLogout } = useAuth();
-
-    useEffect(() => {
-        console.log("token: ", token);
-    }, [token]);
+    const { token, onLogout } = useAuth();
 
     return(
         <>
             <h2>Dashboard</h2>
             <QueryClientProvider client={queryClient}>
-                <Todos token={token}/>
+                <Todos token={token} handleLogout={onLogout}/>
             </QueryClientProvider>
         </>
     );
@@ -37,30 +33,55 @@ function Todos(props) {
     const queryClient = useQueryClient();
     const token = props.token;
 
-    const get = useQuery('todos', () => getTodos(token));
+    const expiredToken = (err) => {
+        if(err.response.date === "Invalid Token"){
+            props.handleLogout();
+        }
+    }
+
+    const get = useQuery('todos', getTodos, {
+        onSettled: (data, error) => {
+            //console.log(data, error);
+        },
+        onError: (error) => {
+            expiredToken(error);
+        }
+    });
 
     const del = useMutation(deleteTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries('todos')
         },
+        onError: (error) => {
+            expiredToken(error);
+        }
     });
 
     const mutation = useMutation(addTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries('todos')
         },
+        onError: (error) => {
+            expiredToken(error);
+        }
     })
 
     const updateMutation = useMutation(updateTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries('todos')
         },
+        onError: (error) => {
+            expiredToken(error);
+        }
     })
 
     const markTodoComplete = useMutation(completeTodo, {
         onSuccess: () => {
             queryClient.invalidateQueries('todos')
         },
+        onError: (error) => {
+            expiredToken(error);
+        }
     })
 
     return (

@@ -56,8 +56,14 @@ export default function Task(props) {
     }
 
     useEffect(() => {
-        console.log(done);
+        //console.log(done);
     }, [done]);
+
+    useEffect(() => {
+        //console.log("new props");
+        setStartTime(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+        setEndTime(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+    }, [props]);
 
     return (
         <>
@@ -122,7 +128,7 @@ function InfoDialog(props) {
     }
 
     useEffect(() => {
-        console.log("info dialog props: ", props);
+        //console.log("info dialog props: ", props);
     }, [props.token]);
 
     const sendUpdate = async (values) => {

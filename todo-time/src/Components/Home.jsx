@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from "../custom_hooks/useAuth";
-import useToken from "../custom_hooks/useToken";
 import Login from './Login/Login';
 
 export const Home = () => {
     const { token, onLogin } = useAuth();
     const [ login, setLogin ] = useState(false);
-    //const { token } = useToken();
-
-    useEffect(() => {
-        console.log(token);
-    }, [token]);
 
     return (
         <>

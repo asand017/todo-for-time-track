@@ -21,17 +21,18 @@ export const login = async (credentials) => {
     });
     console.log(response);
     user_id = response.data.id;
+    token = response.data.token;
     console.log(user_id);
     return response;
 }
 
-export const getTodos = async (tok) => {
-    token = tok;
+export const getTodos = async () => {
+    //token = tok;
     return axios.get( api_url + 'todos/fetchTodos/'+user_id, { headers: {
             'x-access-token': token
         }
     }).then((data) => {
-        console.log(data);
+        //console.log(data);
         return data;
     })
 }

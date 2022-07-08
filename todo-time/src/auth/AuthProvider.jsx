@@ -47,9 +47,9 @@ export const AuthProvider = ({ children }) => {
         onLogout: handleLogout,
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         console.log(token);
-    }, [token]);
+    }, [token]);*/
 
     return (
         <AuthContext.Provider value={value}>
