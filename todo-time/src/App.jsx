@@ -1,14 +1,14 @@
 import React from 'react';
 import './App.css';
-import Dashboard from './components/Dashboard/Dashboard';
+import Dashboard from './Components/Dashboard/Dashboard';
 import { Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
-import Home from './components/Home';
+import Home from './Components/Home';
 import { NoMatch } from './NoMatch';
 import { ProtectedRoute } from './auth/ProtectedRoute';
-import { Navigation } from './components/Navigation';
-import Login from './components/Login/Login';
-import Register from './components/Login/Register';
+import { Navigation } from './Components/Navigation';
+import Login from './Components/Login/Login';
+import Register from './Components/Login/Register';
 
 export default function App() {
     return (
