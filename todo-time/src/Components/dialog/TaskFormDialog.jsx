@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useFormik } from 'formik';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -7,7 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
-import { isBefore, subDays } from 'date-fns';
+import { isBefore, subDays, parseISO } from 'date-fns';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -19,6 +19,7 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import { DialogTitle, DialogContent } from '@mui/material';
 import DialogComponent from './Dialog';
+
 
 export default function TaskFormDialog(props) {
     const { onClose, open, task } = props;
@@ -74,6 +75,12 @@ export default function TaskFormDialog(props) {
             setDateValue(null);
         }
 
+        if (props.intent === "update"){
+            setStartTime(formik.values.startTime);
+            setEndTime(formik.values.endTime);
+            setDateValue(formik.values.day);
+        }
+
         onClose();
     }
 
@@ -87,7 +94,9 @@ export default function TaskFormDialog(props) {
                 <Box
                     component="form"
                     sx={{
-                        '& > :not(style)': {m: 1, width: '25ch'},
+                        '& > :not(style)': {m: 1, width: '25ch', maxWidth: '100%'},
+                        display: 'flex',
+                        flexDirection: 'column',
                     }}
                     autoComplete="off"
                     onSubmit={formik.handleSubmit}
@@ -111,9 +120,9 @@ export default function TaskFormDialog(props) {
                             onChange={(event) => {
                                 setPriority(event.target.value)
                             }}>
-                            <FormControlLabel value="1" control={<Radio/>} label="1" />
-                            <FormControlLabel value="2" control={<Radio/>} label="2" />
-                            <FormControlLabel value="3" control={<Radio/>} label="3" />
+                            <FormControlLabel value="1" control={<Radio sx={{color: 'green', '&.Mui-checked': { color: 'green' }}}/>} label="1" />
+                            <FormControlLabel value="2" control={<Radio sx={{color:'yellow', '&.Mui-checked': { color: 'yellow' }}}/>} label="2" />
+                            <FormControlLabel value="3" control={<Radio sx={{color: 'red', '&.Mui-checked': { color: 'red' }}}/>} label="3" />
                         </RadioGroup>
                     </FormControl>
                     <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -121,7 +130,11 @@ export default function TaskFormDialog(props) {
                             label="Date"
                             value={dateValue}
                             shouldDisableDate={(day) => { 
-                                return isBefore(day, subDays(Date.now(), 1)); 
+                                if(props.intent === "add")
+                                    return isBefore(day, subDays(Date.now(), 1)); 
+
+                                if(props.intent === "update")
+                                    return isBefore(day, parseISO(dateValue));
                             }}
                             onChange={(newValue) => {
                                 setDateValue(newValue);
@@ -149,7 +162,7 @@ export default function TaskFormDialog(props) {
                             label="End Time"
                             value={endTime}
                             shouldDisableTime={(time, clock) => { 
-                                console.log(time, clock.slice(0,clock.length-1), startTime);
+                                //console.log(time, clock.slice(0,clock.length-1), startTime);
                                 if (time < startTime.c[clock.slice(0,clock.length-1)]) {
                                     return true;
                                 }
@@ -160,12 +173,12 @@ export default function TaskFormDialog(props) {
                             renderInput={(params) => <TextField {...params}/>}
                         />
                     </LocalizationProvider>
-                    <div style={{width: '100%', display: 'flex', justifyContent: 'center' }}>
-                        <Stack direction='row' spacing={2}>
-                            <Button color="primary" variant="outlined" type="submit">{props.action_button_text}</Button>
-                            <Button color="primary" variant="outlined" onClick={handleClose}>{props.close_button_text}</Button>
-                        </Stack>
-                    </div>
+            
+                    <Stack direction='row' spacing={2} sx={{justifyContent: 'end'}}>
+                        <Button color="primary" variant="outlined" type="submit">{props.action_button_text}</Button>
+                        <Button color="primary" variant="outlined" onClick={handleClose}>{props.close_button_text}</Button>
+                    </Stack>
+                 
                 </Box>
             </DialogContent>
         </DialogComponent>

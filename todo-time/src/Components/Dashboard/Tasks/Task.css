@@ -1,7 +1,7 @@
 .card-face_container {
     display: grid;
     grid-template-areas: 'task_info expand';
-    grid-template-columns: 4fr 1fr;
+    grid-template-columns: 5fr 1fr;
     padding: 1rem;
 }
 
@@ -12,8 +12,12 @@
     grid-template-columns:  auto 0.75fr 1fr;
 }
 
-.task-complete, .task-title, .task-time-frame {
+.task-complete, .task-title {
     justify-self: start;
+}
+
+.task-time-frame {
+    justify-self: end;
 }
 
 .task-title {
@@ -74,10 +78,17 @@
     font-size: 1rem;
 }
 
-@media screen and (max-width: 456px){
+@media screen and (max-width: 478px){
+
+    .task-info {
+        grid-template-areas: 'id title';
+        grid-template-columns:  1fr 5fr;
+    }
+    
     .task-title {
         padding-right: 1em;
         font-weight: 500;
+        justify-self: start;
     }
 
     .task-time-frame {

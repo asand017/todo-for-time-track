@@ -15,24 +15,21 @@ import TaskFormDialog from '../../dialog/TaskFormDialog';
 import './Task.css';
 import { useContext } from 'react';
 import { DeleteContext, UpdateContext, CompleteTodoContext } from '../../../Contexts.js';
-import { useAuth } from '../../../custom_hooks/useAuth';
 
 const priorityColors = {
-    1: 'green priority',
-    2: 'yellow priority',
-    3: 'red priority'
+    1: '#358f1e',
+    2: '#bdbd28',
+    3: '#86242A'
 }
 
 export default function Task(props) {
     const [open, setOpen] = React.useState(false);
     const [startTime, setStartTime] = React.useState(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
     const [endTime, setEndTime] = React.useState(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
-    const [day, setDay] = React.useState(props.day ? DateTime.fromISO(props.day).toLocaleString(DateTime.DATE_SHORT) : null);//format(parseISO(props.day), 'MM/dd/yyyy'));
-    const [done, setDone] = React.useState(false);
+    const [done, setDone] = React.useState(props.complete);
     const delte = useContext(DeleteContext);
     const update = useContext(UpdateContext);
     const complete = useContext(CompleteTodoContext);
-    const { token } = useAuth();
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -46,7 +43,7 @@ export default function Task(props) {
         let d = !done;
         setDone(d);
         try {
-            const td = await complete.mutateAsync({
+            await complete.mutateAsync({
                 id: props.no,
                 complete: d
             });
@@ -56,11 +53,6 @@ export default function Task(props) {
     }
 
     useEffect(() => {
-        //console.log(done);
-    }, [done]);
-
-    useEffect(() => {
-        //console.log("new props");
         setStartTime(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
         setEndTime(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
     }, [props]);
@@ -73,8 +65,8 @@ export default function Task(props) {
                         <div className='task-complete'>
                             <FormGroup sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
                                 <FormControlLabel control={
-                                    <Checkbox sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={toggleCompletedTask}/>
-                                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}} value={done}/>
+                                    <Checkbox checked={done} sx={{ '& .MuiSvgIcon-root': {fontSize: 30} }} onClick={toggleCompletedTask}/>
+                                } sx={{ '& .MuiFormControlLabel-label': {fontSize: 18, fontWeight: 600}}}/>
                             </FormGroup>  
                         </div>
                         <div className='task-title'><p>{props.name}</p></div> 
@@ -91,7 +83,7 @@ export default function Task(props) {
                 task={props} 
                 start={startTime} 
                 end={endTime} 
-                day={day} 
+                day={props.day ? DateTime.fromISO(props.day).toLocaleString(DateTime.DATE_SHORT) : null} 
                 del={delte} 
                 update={update}/>
         </>
@@ -139,7 +131,7 @@ function InfoDialog(props) {
     const sendDelete = async (id) => {
         try {
             console.log("send delete to db at id="+id);
-            const td = await props.del.mutateAsync(id);
+            await props.del.mutateAsync(id);
         } catch (error) {
             console.log(error);
         } finally {
@@ -149,7 +141,7 @@ function InfoDialog(props) {
 
     return (
         <>
-            <DialogComponent onClose={handleClose} open={open}>
+            <DialogComponent onClose={handleClose} open={open} color={priorityColors[props.task.priority]}>
                 <DialogTitle>
                     <div className='title'>
                         <div>{props.task.name}</div>
@@ -157,7 +149,7 @@ function InfoDialog(props) {
                             <CloseIcon className='icon'/>
                         </IconButton>
                     </div>
-                    <div className={priorityColors[props.task.priority]}>Priority: {props.task.priority}</div>
+                    <div className="priority" style={{color: priorityColors[props.task.priority]}}>Priority: {props.task.priority}</div>
                     <div className='date-time'>
                         <div>{props.day}</div>
                         <div className='time-block'>{props.start} - {props.end}</div>
@@ -167,9 +159,9 @@ function InfoDialog(props) {
                     <h3>Description</h3>
                     <p>{props.task.description}</p>
                 </DialogContent>
-                <DialogActions sx={{paddingLeft: '24px', paddingRight: '24px'}}>
-                    <Button onClick={handleEdit}>Edit</Button>
-                    <Button onClick={handleDelete}>Delete</Button>
+                <DialogActions sx={{display: 'flex', justifyContent: 'center', padding: '1em'}}>
+                    <Button className="action-button" variant='contained' onClick={handleEdit}>Edit</Button>
+                    <Button className="action-button" variant='contained' onClick={handleDelete}>Delete</Button>
                 </DialogActions>
             </DialogComponent>
             <TaskFormDialog onClose={handleEditClose}

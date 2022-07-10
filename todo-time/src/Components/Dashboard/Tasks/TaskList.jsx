@@ -9,7 +9,7 @@ export default function TaskList(props){
 
     useEffect(() => {
         if(data) {
-            console.log("DATA IS READY", data);
+         
             let dates = {}
             data.data.forEach(t => {
                 let date = DateTime.fromISO(t.day).toLocaleString(DateTime.DATE_SHORT);
@@ -20,15 +20,13 @@ export default function TaskList(props){
                 dates[date].push(t);
             })
             const d = Object.keys(dates).map(key => ({ date: key, tasks: dates[key] }));
+
+            // sort dated tasks by calendar day
             d.sort(function(a,b) { 
-                //console.log(DateTime.fromFormat(a.date, 'D'), DateTime.fromFormat(b.date, 'D'));
-                //console.log(DateTime.fromFormat(a.date, 'D').ts - DateTime.fromFormat(b.date, 'D').ts);
                 return DateTime.fromFormat(a.date, 'D').ts - DateTime.fromFormat(b.date, 'D').ts;
             });
-            console.log("tasks sorted by dates:", d);
-            //console.log("tasks sorted by dates:", dates);
+            
             setTodosByDate(d);
-            //setTodosByDate(dates);
         }
     }, [props.query, isSuccess, data]);
 
@@ -59,6 +57,7 @@ export default function TaskList(props){
                                     start={todo.start_time}
                                     end={todo.end_time}
                                     day={todo.day}
+                                    complete={todo.complete}
                                 />);
                             })}
                             </Stack>

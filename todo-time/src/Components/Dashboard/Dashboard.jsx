@@ -22,7 +22,6 @@ export default function Dashboard() {
 
     return(
         <>
-            <h2>Dashboard</h2>
             <QueryClientProvider client={queryClient}>
                 <Todos token={token} handleLogout={onLogout}/>
             </QueryClientProvider>
@@ -34,13 +33,12 @@ function Todos(props) {
     const navigate = useNavigate();
     const location = useLocation();
     const queryClient = useQueryClient();
-    //const token = props.token;
 
     const expiredToken = (err) => {
         if(err.response.data === "Invalid Token"){
             console.log("TOKEN EXPIRED");
             props.handleLogout();
-            const origin = location.state?.from?.pathname || '/home';
+            const origin = location.state?.from?.pathname || '/login';
             navigate(origin);
         }
     }
@@ -88,7 +86,7 @@ function Todos(props) {
     })
 
     return (
-        <Container maxWidth='lg'>
+        <Container maxWidth='lg' sx={{height: '100vh'}}>
             <TaskAdd mutation={mutation} />
             <DeleteContext.Provider value={del}>
                 <UpdateContext.Provider value={updateMutation}>
