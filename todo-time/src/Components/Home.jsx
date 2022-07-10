@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from "../custom_hooks/useAuth";
-import Login from './Login/Login';
+import { NavLink } from "react-router-dom";
 
 export const Home = () => {
-    const { token, onLogin } = useAuth();
-    const [ login, setLogin ] = useState(false);
+    const { token } = useAuth();
 
     return (
         <>
             <h2>Home Page</h2>
-
-            {!token && <button type="button" onClick={() => { setLogin(true); }}>
-                Sign In
-            </button>}
-
-            {login && <Login handleLogin={onLogin}/>}
+            {(!token) && <button><NavLink to="/login" style={{textDecoration: 'none', color: 'black'}}>Sign In</NavLink></button>}
         </>
     )
 }

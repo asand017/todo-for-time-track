@@ -7,6 +7,8 @@ import { Home } from './components/Home';
 import { NoMatch } from './NoMatch';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { Navigation } from './components/Navigation';
+import Login from './components/Login/Login';
+import Register from './components/Login/Register';
 
 export default function App() {
     return (
@@ -17,6 +19,8 @@ export default function App() {
                 <Routes>
                     <Route index element={<Home />} />
                     <Route path="home" element={<Home />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="register" element={<Register />} />
                     <Route path="dashboard" element={
                             <ProtectedRoute>
                                 <Dashboard />

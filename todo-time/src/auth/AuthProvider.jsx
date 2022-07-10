@@ -1,38 +1,56 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../Contexts';
-import { login } from '../api/apiService';
+import { login, register } from '../api/apiService';
 import useToken from '../custom_hooks/useToken';
+
+const setUserIdToStorage = (id) => {
+    localStorage.setItem('user_id', id);
+}
 
 const loginUser = async (creds) => {
     const res = await login(creds);
     //console.log(res.data);
-    localStorage.setItem('user_id', res.data.id);
-    const token = res.data.token;
-    console.log(token);
-    return token;
+    setUserIdToStorage(res.data.id);
+    return res.data.token;
+    //console.log(token);
+    //return token;
+}
+
+const registerUser = async (reg) => {
+    const res = await register(reg);
+    setUserIdToStorage(res.data.id);
+    return res.data.token;
 }
 
 export const AuthProvider = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
-
-    //const tokenHook = useToken();
-    //const [token, setToken] = useState();
     const { token, setToken, clearToken } = useToken();
 
-    const handleLogin = async (e, email, password ) => {
+    const handleNav = (route) => {
+        const origin = location.state?.from?.pathname || route;
+        navigate(origin);
+    }
+
+    const handleRegister = async (e, reg) => {
         e.preventDefault();
-        const tok = await loginUser({
-            email,
-            password
-        });
+        console.log("register new user");
+        const tok = await registerUser(reg);
+        console.log("completed registration:", tok);
+        setToken(tok);
+        navigate('./dashboard');
+    }
+
+    const handleLogin = async (e, cred) => {
+        e.preventDefault();
+        const tok = await loginUser(cred);
         console.log(tok);
-        //tokenHook.setToken(tok); // save token to browser storage
         setToken(tok);
 
-        const origin = location.state?.from?.pathname || '/dashboard';
-        navigate(origin);
+        handleNav('/dashboard');
+        //const origin = location.state?.from?.pathname || '/dashboard';
+        //navigate(origin);
     }
 
     const handleLogout = () => {
@@ -45,11 +63,8 @@ export const AuthProvider = ({ children }) => {
         token,
         onLogin: handleLogin,
         onLogout: handleLogout,
+        onRegister: handleRegister
     };
-
-    /*useEffect(() => {
-        console.log(token);
-    }, [token]);*/
 
     return (
         <AuthContext.Provider value={value}>

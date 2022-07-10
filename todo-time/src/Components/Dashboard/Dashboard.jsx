@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     useQuery,
     useMutation,
@@ -6,6 +6,7 @@ import {
     QueryClient,
     QueryClientProvider
   } from 'react-query';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { getTodos, addTodo, deleteTodo, updateTodo, completeTodo } from '../../api/apiService';
 import Container from '@mui/material/Container';
 import TaskAdd from './Tasks/TaskAdd';
@@ -30,19 +31,21 @@ export default function Dashboard() {
 }
 
 function Todos(props) {
+    const navigate = useNavigate();
+    const location = useLocation();
     const queryClient = useQueryClient();
-    const token = props.token;
+    //const token = props.token;
 
     const expiredToken = (err) => {
-        if(err.response.date === "Invalid Token"){
+        if(err.response.data === "Invalid Token"){
+            console.log("TOKEN EXPIRED");
             props.handleLogout();
+            const origin = location.state?.from?.pathname || '/home';
+            navigate(origin);
         }
     }
 
     const get = useQuery('todos', getTodos, {
-        onSettled: (data, error) => {
-            //console.log(data, error);
-        },
         onError: (error) => {
             expiredToken(error);
         }

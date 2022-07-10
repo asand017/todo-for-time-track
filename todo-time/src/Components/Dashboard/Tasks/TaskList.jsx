@@ -7,7 +7,6 @@ export default function TaskList(props){
     const { isSuccess, isLoading, isError, data, error } = props.query;
     const [ todosByDate, setTodosByDate ] = useState({});
 
-
     useEffect(() => {
         if(data) {
             console.log("DATA IS READY", data);

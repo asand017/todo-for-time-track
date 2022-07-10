@@ -59,11 +59,16 @@ export default function TaskFormDialog(props) {
                 end_time: endTime.toLocaleString(DateTime.TIME_24_SIMPLE),
                 day: dateValue
             });
+            
             handleClose();
         }
     })
 
     const handleClose = () => {
+        formik.resetForm();
+        setStartTime(0);
+        setEndTime(0);
+        setDateValue(null);
         onClose();
     }
 
