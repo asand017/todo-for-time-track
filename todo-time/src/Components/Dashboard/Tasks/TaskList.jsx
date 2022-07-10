@@ -5,7 +5,7 @@ import Task from './Task';
 
 export default function TaskList(props){
     const { isSuccess, isLoading, isError, data, error } = props.query;
-    const [ todosByDate, setTodosByDate ] = useState({});
+    const [ todosByDate, setTodosByDate ] = useState([]);
 
     useEffect(() => {
         if(data) {
@@ -19,9 +19,16 @@ export default function TaskList(props){
 
                 dates[date].push(t);
             })
-
-            console.log("tasks sorted by dates:", dates);
-            setTodosByDate(dates);
+            const d = Object.keys(dates).map(key => ({ date: key, tasks: dates[key] }));
+            d.sort(function(a,b) { 
+                //console.log(DateTime.fromFormat(a.date, 'D'), DateTime.fromFormat(b.date, 'D'));
+                //console.log(DateTime.fromFormat(a.date, 'D').ts - DateTime.fromFormat(b.date, 'D').ts);
+                return DateTime.fromFormat(a.date, 'D').ts - DateTime.fromFormat(b.date, 'D').ts;
+            });
+            console.log("tasks sorted by dates:", d);
+            //console.log("tasks sorted by dates:", dates);
+            setTodosByDate(d);
+            //setTodosByDate(dates);
         }
     }, [props.query, isSuccess, data]);
 
@@ -37,11 +44,12 @@ export default function TaskList(props){
     return (
         <Stack spacing={3}>
             <>
-                { Object.keys(todosByDate).map( (date) => {
+                { todosByDate.map( (data) => {
                     return (
-                        <div key={date}>
-                            <h2 key={date}>{date}</h2>
-                            { todosByDate[date].map( (todo) => {
+                        <div key={data.date}>
+                            <h2 key={data.date}>{data.date}</h2>
+                            <Stack spacing={2}>
+                            { data.tasks.map( (todo) => {
                                 return (   
                                 <Task key={todo.id} 
                                     no={todo.id}
@@ -53,6 +61,7 @@ export default function TaskList(props){
                                     day={todo.day}
                                 />);
                             })}
+                            </Stack>
                         </div>
                     );
                 })}

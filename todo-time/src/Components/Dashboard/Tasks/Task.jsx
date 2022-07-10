@@ -101,7 +101,6 @@ export default function Task(props) {
 
 function InfoDialog(props) {
     const { onClose, open } = props;
-    const [priorityColor, setPriorityColor] = useState('');
     const [openDelete, setOpenDelete] = useState(false);
     const [edit, setEdit] = useState(false);
 
@@ -110,12 +109,10 @@ function InfoDialog(props) {
     }
 
     const handleDeleteClose = () => {
-        //handleClose();
         setOpenDelete(false);
     }
 
     const handleEditClose = () => {
-        //handleClose();
         setEdit(false);
     }
 
@@ -126,10 +123,6 @@ function InfoDialog(props) {
     const handleEdit = () => {
         setEdit(true);
     }
-
-    useEffect(() => {
-        //console.log("info dialog props: ", props);
-    }, [props.token]);
 
     const sendUpdate = async (values) => {
         try {
@@ -147,7 +140,6 @@ function InfoDialog(props) {
         try {
             console.log("send delete to db at id="+id);
             const td = await props.del.mutateAsync(id);
-            //console.log(td);
         } catch (error) {
             console.log(error);
         } finally {
@@ -183,6 +175,7 @@ function InfoDialog(props) {
             <TaskFormDialog onClose={handleEditClose}
                 open={edit}
                 task={props.task}
+                intent="update"
                 submitCallback={sendUpdate}
                 action_button_text="Update"
                 close_button_text="Cancel"

@@ -7,6 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
+import { isBefore, subDays } from 'date-fns';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -49,7 +50,7 @@ export default function TaskFormDialog(props) {
         },
         validate: validate,
         onSubmit: (values) => {
-            console.log("PROCESSING TODO");
+            
             props.submitCallback({
                 id: values.id,
                 name: values.name,
@@ -65,16 +66,17 @@ export default function TaskFormDialog(props) {
     })
 
     const handleClose = () => {
-        formik.resetForm();
-        setStartTime(0);
-        setEndTime(0);
-        setDateValue(null);
+        console.log("resetting date/time fields");
+        if (props.intent === "add"){
+            formik.resetForm();
+            setStartTime(0);
+            setEndTime(0);
+            setDateValue(null);
+        }
+
         onClose();
     }
 
-    useEffect(() => {
-        //console.log("new date set", dateValue);
-    }, [dateValue])
 
     return (
         <DialogComponent onClose={handleClose} open={open}>
@@ -118,6 +120,9 @@ export default function TaskFormDialog(props) {
                         <DatePicker
                             label="Date"
                             value={dateValue}
+                            shouldDisableDate={(day) => { 
+                                return isBefore(day, subDays(Date.now(), 1)); 
+                            }}
                             onChange={(newValue) => {
                                 setDateValue(newValue);
                             }}
@@ -128,6 +133,13 @@ export default function TaskFormDialog(props) {
                         <TimePicker
                             label="Start Time"
                             value={startTime}
+                            shouldDisableTime={(time, clock) => { 
+                                //console.log(time, clock.slice(0,clock.length-1), DateTime.now());
+                                let t = (!startTime) ? DateTime.now() : startTime;
+                                if (time < t.c[clock.slice(0,clock.length-1)]) {
+                                    return true;
+                                }
+                            }}
                             onChange={(value) => {
                                 setStartTime(value);
                             }}
@@ -136,6 +148,12 @@ export default function TaskFormDialog(props) {
                         <TimePicker
                             label="End Time"
                             value={endTime}
+                            shouldDisableTime={(time, clock) => { 
+                                console.log(time, clock.slice(0,clock.length-1), startTime);
+                                if (time < startTime.c[clock.slice(0,clock.length-1)]) {
+                                    return true;
+                                }
+                            }}
                             onChange={(value) => {
                                 setEndTime(value);
                             }}
@@ -153,13 +171,3 @@ export default function TaskFormDialog(props) {
         </DialogComponent>
     )
 }
-
-/*
-<TextField required id="priority" 
-                        name="priority" 
-                        label="Priority" 
-                        value={formik.values.priority}
-                        onChange={formik.handleChange}
-                        error={formik.touched.priority && Boolean(formik.errors.priority)}/>
-
-*/

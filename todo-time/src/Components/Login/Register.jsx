@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useAuth } from "../../custom_hooks/useAuth";
+import './Register.css';
 
 export default function Register() {
     const { onRegister } = useAuth();

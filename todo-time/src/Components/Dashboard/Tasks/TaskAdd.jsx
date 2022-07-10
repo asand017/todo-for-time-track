@@ -23,6 +23,7 @@ export default function TaskAdd(props) {
             <TaskFormDialog onClose={handleClose}
                 open={open}
                 task={{}}
+                intent="add"
                 submitCallback={props.mutation.mutate}
                 action_button_text="Confirm"
                 close_button_text="Cancel"
