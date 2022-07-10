@@ -3,7 +3,7 @@ import './App.css';
 import Dashboard from './components/Dashboard/Dashboard';
 import { Route, Routes } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthProvider';
-import { Home } from './components/Home';
+import Home from './components/Home';
 import { NoMatch } from './NoMatch';
 import { ProtectedRoute } from './auth/ProtectedRoute';
 import { Navigation } from './components/Navigation';

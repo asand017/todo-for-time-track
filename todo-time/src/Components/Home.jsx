@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from "../custom_hooks/useAuth";
 import { NavLink } from "react-router-dom";
 
-export const Home = () => {
+export default function Home () {
     const { token } = useAuth();
 
     return (
