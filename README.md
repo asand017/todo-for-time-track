@@ -14,9 +14,9 @@ Planning [doc](https://docs.google.com/document/d/1th8t0-3OjnLFcPw42Mge2p-lQod8g
 ## Demo
 Live deploy <https://time-tracking-helper.herokuapp.com>
 
-To access dashboard, register a new account through the link on the login form or use credentials: 
-**email**: demo.user@gmail.com
-**password**: 12345
+To access dashboard, register a new account through the link on the login form or use credentials:   
+**email**: demo.user@gmail.com. 
+**password**: 12345. 
 
 ## Technologies
 **Task Time Tracker** was created with:
