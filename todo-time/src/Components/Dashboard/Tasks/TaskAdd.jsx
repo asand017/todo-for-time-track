@@ -22,7 +22,7 @@ export default function TaskAdd(props) {
             </Fab>
             <TaskFormDialog onClose={handleClose}
                 open={open}
-                task={{}}
+                task={{title: 'Creating Task'}}
                 intent="add"
                 submitCallback={props.mutation.mutate}
                 action_button_text="Confirm"

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Stack from '@mui/material/Stack';
 import { DateTime } from 'luxon';
+import { isToday, parseISO } from 'date-fns';
 import Task from './Task';
 
 export default function TaskList(props){
@@ -48,6 +49,9 @@ export default function TaskList(props){
                             <h2 key={data.date}>{data.date}</h2>
                             <Stack spacing={2}>
                             { data.tasks.map( (todo) => {
+                                /*if(isToday(parseISO(todo.day))){
+                                    console.log("DAY IS TODAY");
+                                }*/
                                 return (   
                                 <Task key={todo.id} 
                                     no={todo.id}
@@ -57,6 +61,7 @@ export default function TaskList(props){
                                     start={todo.start_time}
                                     end={todo.end_time}
                                     day={todo.day}
+                                    isToday={isToday(parseISO(todo.day))}
                                     complete={todo.complete}
                                 />);
                             })}

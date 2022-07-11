@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useFormik } from 'formik';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -7,7 +7,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DateTime } from 'luxon';
-import { isBefore, subDays, parseISO } from 'date-fns';
+import { isBefore, isAfter, subDays, isToday, parseISO } from 'date-fns';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
@@ -23,10 +23,12 @@ import DialogComponent from './Dialog';
 
 export default function TaskFormDialog(props) {
     const { onClose, open, task } = props;
-    const [startTime, setStartTime] = useState(task.start ? DateTime.fromFormat(task.start, 'TT') : 0);
-    const [endTime, setEndTime] = useState(task.end ? DateTime.fromFormat(task.end, 'TT') : 0);
+    const [startTime, setStartTime] = useState(task.start ? DateTime.fromFormat(task.start, 'TT') : null);
+    const [endTime, setEndTime] = useState(task.end ? DateTime.fromFormat(task.end, 'TT') : null);
     const [dateValue, setDateValue] = useState(task.day ? task.day : null);
     const [priority, setPriority] = useState(task.priority ? task.priority : 1);
+    const startObj = {}
+    const endObj = {}
 
     const validate = (values, props) => {
         const errors = {};
@@ -51,7 +53,6 @@ export default function TaskFormDialog(props) {
         },
         validate: validate,
         onSubmit: (values) => {
-            
             props.submitCallback({
                 id: values.id,
                 name: values.name,
@@ -61,17 +62,15 @@ export default function TaskFormDialog(props) {
                 end_time: endTime.toLocaleString(DateTime.TIME_24_SIMPLE),
                 day: dateValue
             });
-            
             handleClose();
         }
     })
 
     const handleClose = () => {
-        console.log("resetting date/time fields");
         if (props.intent === "add"){
             formik.resetForm();
-            setStartTime(0);
-            setEndTime(0);
+            setStartTime(null);
+            setEndTime(null);
             setDateValue(null);
         }
 
@@ -80,15 +79,18 @@ export default function TaskFormDialog(props) {
             setEndTime(formik.values.endTime);
             setDateValue(formik.values.day);
         }
-
         onClose();
     }
+
+    useEffect(() => {
+
+    }, []);
 
 
     return (
         <DialogComponent onClose={handleClose} open={open}>
-            <DialogTitle>
-                {task.title}
+            <DialogTitle sx={{display: 'flex', justifyContent: 'center', margin: '0', textDecoration: 'underline', fontWeight: 'bold', fontSize: '1.75rem'}}>
+                {task.title ? task.title : 'Updating Task'}
             </DialogTitle>
             <DialogContent>
                 <Box
@@ -130,11 +132,22 @@ export default function TaskFormDialog(props) {
                             label="Date"
                             value={dateValue}
                             shouldDisableDate={(day) => { 
+
+                                //console.log(formatISO(day), formatISO(toDate(Date.now())));
+                                /*if(isToday(parseISO(dateValue))){
+                                    console.log("DAY IS TODAY");
+                                }*/
+
                                 if(props.intent === "add")
                                     return isBefore(day, subDays(Date.now(), 1)); 
 
-                                if(props.intent === "update")
-                                    return isBefore(day, parseISO(dateValue));
+                                if(props.intent === "update"){
+                                    if(isAfter(day, subDays(Date.now(), 1))){
+                                        return false;
+                                    }else{
+                                        return isBefore(day, parseISO(dateValue));
+                                    }
+                                }
                             }}
                             onChange={(newValue) => {
                                 setDateValue(newValue);
@@ -144,13 +157,49 @@ export default function TaskFormDialog(props) {
                     </LocalizationProvider>
                     <LocalizationProvider dateAdapter={AdapterLuxon}>
                         <TimePicker
+                            disabled={dateValue ? false : true}
                             label="Start Time"
                             value={startTime}
                             shouldDisableTime={(time, clock) => { 
-                                //console.log(time, clock.slice(0,clock.length-1), DateTime.now());
-                                let t = (!startTime) ? DateTime.now() : startTime;
-                                if (time < t.c[clock.slice(0,clock.length-1)]) {
-                                    return true;
+                              
+                                let c = clock.slice(0,clock.length-1);
+                                if(c === 'hour' || c === 'minute')
+                                    startObj[c] = time;
+
+                                /*if (Object.keys(startObj).length === 2) {
+                                    console.log(startObj);
+                                }*/
+
+                                //console.log("current dateValue:", parseISO(dateValue));
+                                //let day = parseISO(dateValue);
+                                //let today = subDays(Date.now(), 1);
+                                //console.log(today, isBefore(day, today));
+
+                                /* Not sure if this block is necessary anymore
+                                if (isBefore(day, today)){
+                                    console.log("day is before today");
+                                    let t = DateTime.now();
+                                    if (clock === 'hours' && time < t.c[c]) {
+                                        return true;
+                                    }
+
+                                    if (clock === 'minutes' && time < t.c[c]){
+                                        return true;
+                                    }
+                                } */
+
+                                let t = DateTime.now();
+                                //console.log("current time: ", t);
+                                if(isToday(parseISO(dateValue))){
+                                    if (clock === 'hours' && time < t.c[c]) {
+                                        return true;
+                                    }
+
+                                    if (clock === 'minutes') {
+                                        if(startObj['hour'] <= t.hour && time < t.c[c]){
+                                            return true;
+                                        }
+                                    }
                                 }
                             }}
                             onChange={(value) => {
@@ -159,22 +208,57 @@ export default function TaskFormDialog(props) {
                             renderInput={(params) => <TextField {...params}/>}
                         />
                         <TimePicker
+                            disabled={dateValue ? false : true}
                             label="End Time"
                             value={endTime}
                             shouldDisableTime={(time, clock) => { 
+
+                                let c = clock.slice(0,clock.length-1);
+                                if(c === 'hour' || c === 'minute')
+                                    endObj[c] = time;
+
+                                /*if (Object.keys(endObj).length === 2) {
+                                    console.log(endObj);
+                                }*/
+
+                                // if endTime hour is within the same hour as startTime, need to compare minutes of 'startObj' and 'endObj'
+                                // else if endTime hour is after startTime hour, allow all minutes
+                                
                                 //console.log(time, clock.slice(0,clock.length-1), startTime);
-                                if (time < startTime.c[clock.slice(0,clock.length-1)]) {
+                                if(clock === 'hours' && time < startObj['hour']){
                                     return true;
                                 }
+
+                                let t = DateTime.now();
+                                if(clock === 'minutes'){
+                                    // if day is today, then need to check if endtime is after datetime.now(). If so, disable time
+                                    if(isToday(parseISO(dateValue))){
+                                        //console.log("DAY IS TODAY");
+                                        if(endObj['hour'] < t.hour){
+                                            return true;
+                                        }
+
+                                        if(endObj['hour'] === t.hour){
+                                            if(clock < t.minute){
+                                                return true;
+                                            }
+                                        }
+                                    }
+
+                                    if(endObj['hour'] === startObj['hour'] && time < startObj['minute']){
+                                        return true;
+                                    }
+                                }
+
                             }}
                             onChange={(value) => {
                                 setEndTime(value);
                             }}
-                            renderInput={(params) => <TextField {...params}/>}
+                            renderInput={(params) => <TextField {...params} color='primary'/>}
                         />
                     </LocalizationProvider>
             
-                    <Stack direction='row' spacing={2} sx={{justifyContent: 'end'}}>
+                    <Stack direction='row' spacing={2} sx={{justifyContent: 'center'}}>
                         <Button color="primary" variant="outlined" type="submit">{props.action_button_text}</Button>
                         <Button color="primary" variant="outlined" onClick={handleClose}>{props.close_button_text}</Button>
                     </Stack>

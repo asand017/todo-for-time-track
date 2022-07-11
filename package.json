@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production node server.js",
+    "start-dev": "npx nodemon server.js",
+    "start-local": "cd todo-time && npm install && npm run build && cd .. && node server.js",
     "heroku-postbuild": "cd todo-time && npm install && npm run build"
   },
   "author": "",

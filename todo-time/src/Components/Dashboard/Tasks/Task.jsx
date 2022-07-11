@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import Checkbox from '@mui/material/Checkbox';
@@ -9,6 +8,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import CloseIcon from '@mui/icons-material/Close';
 import { DateTime } from 'luxon';
+import { isBefore, isAfter, isEqual, subDays, parseISO } from 'date-fns';
 import { DialogTitle, DialogActions, DialogContent } from '@mui/material';
 import DialogComponent from '../../dialog/Dialog';
 import TaskFormDialog from '../../dialog/TaskFormDialog';
@@ -22,14 +22,18 @@ const priorityColors = {
     3: '#86242A'
 }
 
+const SECONDS_MS = 1000;
+const MINUTE_MS = 60000;
+
 export default function Task(props) {
-    const [open, setOpen] = React.useState(false);
-    const [startTime, setStartTime] = React.useState(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
-    const [endTime, setEndTime] = React.useState(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
-    const [done, setDone] = React.useState(props.complete);
+    const [open, setOpen] = useState(false);
+    const [startTime, setStartTime] = useState(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+    const [endTime, setEndTime] = useState(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+    const [done, setDone] = useState(props.complete);
     const delte = useContext(DeleteContext);
     const update = useContext(UpdateContext);
     const complete = useContext(CompleteTodoContext);
+    const [errorStatus, setErrorStatus] = useState(isBefore(parseISO(props.day), subDays(Date.now(), 1)) ? true : false)
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -52,14 +56,38 @@ export default function Task(props) {
         }
     }
 
+    // every minute, check if 
     useEffect(() => {
+        //console.log(DateTime.fromISO(props.end), DateTime.now())
+        if(props.isToday){
+            let hit = false;
+            const interval = setInterval(() => {
+                //console.log("checking if task time has expired");
+                if (DateTime.fromISO(props.end) < DateTime.now()) {
+                    
+                    setErrorStatus(true);
+                    hit = true;
+                }
+            }, SECONDS_MS);
+        
+            if(hit){
+                return () => clearInterval(interval);
+            }
+        }
+
+    }, [])
+
+    useEffect(() => {
+        //console.log("received new props");
         setStartTime(DateTime.fromFormat(props.start, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
         setEndTime(DateTime.fromFormat(props.end, 'TT').toLocaleString(DateTime.TIME_SIMPLE));
+        setErrorStatus(isBefore(parseISO(props.day), subDays(Date.now(), 1)) ? true : false);
+        // also need to check if Endtime has elapsed if on the same day
     }, [props]);
 
     return (
         <>
-            <Card>
+            <Card sx={{backgroundColor: done ? 'rgba(0,215,0,0.5)' : errorStatus ? 'rgba(215,0,0, 0.5)' : 'none'}}>
                 <div className='card-face_container'>
                     <div className='task-info'>
                         <div className='task-complete'>
@@ -83,7 +111,8 @@ export default function Task(props) {
                 task={props} 
                 start={startTime} 
                 end={endTime} 
-                day={props.day ? DateTime.fromISO(props.day).toLocaleString(DateTime.DATE_SHORT) : null} 
+                day={props.day ? DateTime.fromISO(props.day).toLocaleString(DateTime.DATE_SHORT) : null}
+                dayStatus={errorStatus}
                 del={delte} 
                 update={update}/>
         </>
@@ -102,10 +131,12 @@ function InfoDialog(props) {
 
     const handleDeleteClose = () => {
         setOpenDelete(false);
+        handleClose();
     }
 
     const handleEditClose = () => {
         setEdit(false);
+        handleClose();
     }
 
     const handleDelete = () => {
@@ -120,7 +151,6 @@ function InfoDialog(props) {
         try {
             console.log("send update to db at id="+values.id, values);
             const td = await props.update.mutateAsync(values);
-            console.log(td);
         } catch (error) {
             console.log(error);
         } finally {
@@ -144,14 +174,14 @@ function InfoDialog(props) {
             <DialogComponent onClose={handleClose} open={open} color={priorityColors[props.task.priority]}>
                 <DialogTitle>
                     <div className='title'>
-                        <div>{props.task.name}</div>
+                        <div style={{fontWeight: 'bold', fontSize: '1.75rem'}}>{props.task.name}</div>
                         <IconButton aria-label="expand" onClick={handleClose} className="close-button">
                             <CloseIcon className='icon'/>
                         </IconButton>
                     </div>
                     <div className="priority" style={{color: priorityColors[props.task.priority]}}>Priority: {props.task.priority}</div>
                     <div className='date-time'>
-                        <div>{props.day}</div>
+                        <div style={{color: props.dayStatus ? 'red' : 'none'}}>{props.day}</div>
                         <div className='time-block'>{props.start} - {props.end}</div>
                     </div>
                 </DialogTitle>

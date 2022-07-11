@@ -1,7 +1,7 @@
 .card-face_container {
     display: grid;
     grid-template-areas: 'task_info expand';
-    grid-template-columns: 5fr 1fr;
+    grid-template-columns: 5fr 0.5fr;
     padding: 1rem;
 }
 
@@ -9,7 +9,7 @@
     grid-area: task_info;
     display: grid;
     grid-template-areas: 'id title time_frame';
-    grid-template-columns:  auto 0.75fr 1fr;
+    grid-template-columns:  auto 5fr 2fr;
 }
 
 .task-complete, .task-title {
