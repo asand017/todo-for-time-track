@@ -31,7 +31,7 @@ export default function Register() {
                         <TextField id="password" label="Password" type={showPassword ? "text" : "password"} onChange={(e) => setPassword(e.target.value)}/>
                         <label>
                             <input type="checkbox" onChange={(e) => setShowPassword(e.target.checked)}/>
-                            Reveal
+                            Show
                         </label>
                         <Button className="action-button" variant='contained' type="submit">Submit</Button>
                     </Stack>
