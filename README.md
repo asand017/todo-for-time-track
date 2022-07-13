@@ -19,7 +19,7 @@ To access dashboard, register a new account through the link on the login form o
 **password**: 12345<br>
 
 ### Screenshots
-[Todo App Login](https://drive.google.com/uc?export=view&id=1DhiPw2Cw0tPSrg85ZjUbj3WZNx_hlS-E/)
+![Todo App Login](https://drive.google.com/uc?export=view&id=1DhiPw2Cw0tPSrg85ZjUbj3WZNx_hlS-E/)
 
 ## Technologies
 **Task Time Tracker** was created with:
