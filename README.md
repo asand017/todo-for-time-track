@@ -37,8 +37,8 @@ To access dashboard, register a new account through the link on the login form o
 
 ## Setup
 To run this project locally using npm:
-    $ cd todo-for-time-track
-    $ npm run start-local
+> $ cd todo-for-time-track
+> $ npm run start-local
 
 Access the app on http://localhost:3001
 
