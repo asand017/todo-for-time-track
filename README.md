@@ -36,9 +36,9 @@ To access dashboard, register a new account through the link on the login form o
 * Deployment: Heroku
 
 ## Setup
-To run this project locally using npm:
-> $ cd todo-for-time-track
-> $ npm run start-local
+To run this project locally using npm:<br>
+>$ cd todo-for-time-track<br>
+>$ npm run start-local
 
 Access the app on http://localhost:3001
 
