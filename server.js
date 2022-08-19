@@ -4,7 +4,6 @@ const mountRoutes = require('./routes')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const path = require('path')
-const auth = require('./middleware/auth')
 const app = express()
 const port = 3001
 
