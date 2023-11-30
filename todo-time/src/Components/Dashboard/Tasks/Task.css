@@ -1,97 +1,96 @@
 .card-face_container {
-    display: grid;
-    grid-template-areas: 'task_info expand';
-    grid-template-columns: 5fr 0.5fr;
-    padding: 1rem;
+  display: grid;
+  grid-template-areas: "task_info expand";
+  grid-template-columns: 5fr 0.5fr;
+  padding: 1rem;
 }
 
 .task-info {
-    grid-area: task_info;
-    display: grid;
-    grid-template-areas: 'id title time_frame';
-    grid-template-columns:  auto 5fr 2fr;
+  grid-area: task_info;
+  display: grid;
+  grid-template-areas: "id title time_frame";
+  grid-template-columns: auto 5fr 2fr;
 }
 
-.task-complete, .task-title {
-    justify-self: start;
+.task-complete,
+.task-title {
+  justify-self: start;
 }
 
 .task-time-frame {
-    justify-self: end;
+  justify-self: end;
 }
 
 .task-title {
-    padding-right: 2em;
+  padding-right: 2em;
 }
 
-.task-title, .task-time-frame {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.task-title,
+.task-time-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .priority {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 .red {
-    color: red;
+  color: red;
 }
 
 .green {
-    color: green;
+  color: green;
 }
 
 .yellow {
-    color: yellow;
+  color: yellow;
 }
 
 .expand-icon {
-    grid-area: 'expand';
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+  grid-area: "expand";
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .icon:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .info-dialog-buttons {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .title {
-    display: grid;
-    grid-template-columns: 1fr 0.5fr;
-    /*justify-content: space-between;
-    align-items: center;*/
+  display: grid;
+  grid-template-columns: 1fr 0.5fr;
 }
 
 .title > .close-button {
-    padding: 0;
-    justify-self: end;
+  padding: 0;
+  justify-self: end;
 }
 
 .time-block {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
-@media screen and (max-width: 478px){
+@media screen and (max-width: 478px) {
+  .task-info {
+    grid-template-areas: "id title";
+    grid-template-columns: 1fr 5fr;
+  }
 
-    .task-info {
-        grid-template-areas: 'id title';
-        grid-template-columns:  1fr 5fr;
-    }
-    
-    .task-title {
-        padding-right: 1em;
-        font-weight: 500;
-        justify-self: start;
-    }
+  .task-title {
+    padding-right: 1em;
+    font-weight: 500;
+    justify-self: start;
+  }
 
-    .task-time-frame {
-        display: none;
-    }
+  .task-time-frame {
+    display: none;
+  }
 }

@@ -1,7 +1,7 @@
 .container {
-    display: flex;
+  display: flex;
 }
 
 .container > * {
-    margin-right: 1em;
+  margin-right: 1em;
 }
