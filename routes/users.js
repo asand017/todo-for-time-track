@@ -8,7 +8,6 @@ module.exports = router;
 
 router.post("/register", async (req, res) => {
   try {
-    //console.log(req.query)
     const { first_name, last_name, email, password } = req.query;
 
     // validate user input
