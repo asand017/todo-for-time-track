@@ -20,7 +20,6 @@ router.post("/register", async (req, res) => {
     const values = new Array(email);
     const text = "SELECT * FROM users WHERE email=$1";
     const oldUser = await db.query(text, values);
-    //console.log("oldUser:", oldUser)
 
     if (oldUser.rowCount > 0) {
       return res.status(409).send("User Already Exists. Please Login");
@@ -39,8 +38,6 @@ router.post("/register", async (req, res) => {
       encryptedPassword
     );
     const user = await db.query(text2, values2);
-    //console.log("user:", user)
-    //console.log(user.rows)
 
     // Create token - need user id
     const token = jwt.sign(
@@ -50,13 +47,11 @@ router.post("/register", async (req, res) => {
         expiresIn: "2h",
       }
     );
-    //console.log("generated token: ", token)
 
     // save user token to db
     const text3 = "UPDATE users SET token=$1 WHERE email=$2 RETURNING *";
     const values3 = new Array(token, email.toLowerCase());
     const finalUser = await db.query(text3, values3);
-    //console.log(finalUser.rows[0])
 
     res.status(201).json(finalUser.rows[0]);
   } catch (err) {
